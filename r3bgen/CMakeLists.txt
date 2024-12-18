@@ -50,6 +50,7 @@ set(SRCS
     R3Bp2pevtGenerator.cxx
     R3BParticleSelector.cxx
     R3BBeamProperties.cxx
+    R3BQFSGenerator.cxx
     R3BINCLRootGenerator.cxx)
 
 set(HEADERS
@@ -75,6 +76,7 @@ set(HEADERS
     R3Bp2pevtGenerator.h
     R3BParticleSelector.h
     R3BBeamProperties.h
+    R3BQFSGenerator.h
     R3BINCLRootGenerator.h)
 
 add_library_with_dictionary(

@@ -87,8 +87,7 @@ class R3BIonGenerator : public FairGenerator
 
   private:
     Int_t fMult;   // Multiplicity per event
-    FairIon* fIon; // Pointer to the FairIon to be generated
-
+    FairIon* fIon; // Pointer to the FairIon
     TRandom3 fRNG; // the RNG
     ClassDefOverride(R3BIonGenerator, 1)
 };
