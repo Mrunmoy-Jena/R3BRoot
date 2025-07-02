@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -140,18 +140,10 @@ InitStatus R3BTofDOnlineSpectra::Init()
         fh_tofd_channels.resize(fNofPlanes);
         fh_tofd_TotPm.resize(fNofPlanes);
         fh_tofd_TotPm_coinc.resize(fNofPlanes);
-        fh_num_side.resize(fNofPlanes);
         fh_tofd_multihit.resize(fNofPlanes);
         fh_tofd_multihit_coinc.resize(fNofPlanes);
+        fh_num_side.resize(fNofPlanes);
         fh_tofd_dt.resize(fNofPlanes - 1);
-
-        // Canvas to display the Y position as a function of paddle and per plane  ---------------
-        auto* cTofd_Y_per_planes =
-            new TCanvas("TofD_Ypos_planes_Cal", "TOFD: Y-pos per plane with CAL data", 10, 10, 1100, 1000);
-        cTofd_Y_per_planes->Divide(2, fNofPlanes);
-
-        fh2_tofd_ypos_cal.resize(fNofPlanes);
-        fh2_tofd_timedif_cal.resize(fNofPlanes);
 
         for (Int_t j = 0; j < fNofPlanes; j++)
         {
@@ -159,7 +151,7 @@ InitStatus R3BTofDOnlineSpectra::Init()
             sprintf(strName1, "tofd_channels_plane_%d", j + 1);
             char strName2[255];
             sprintf(strName2, "Tofd channels plane %d", j + 1);
-            fh_tofd_channels[j] = R3B::root_owned<TH1F>(strName1, strName2, 90, -45., 45.);
+            fh_tofd_channels[j] = R3B::root_owned<TH1F>(strName1, strName2, 100, -50., 50.);
             fh_tofd_channels[j]->GetXaxis()->SetTitle("Channel");
             fh_tofd_channels[j]->GetYaxis()->SetTitle("Counts");
             fh_tofd_channels[j]->GetYaxis()->SetTitleOffset(1.);
@@ -175,7 +167,7 @@ InitStatus R3BTofDOnlineSpectra::Init()
             sprintf(strName3, "tofd_ToT_plane_%d", j + 1);
             char strName4[255];
             sprintf(strName4, "Tofd ToT plane %d", j + 1);
-            fh_tofd_TotPm[j] = R3B::root_owned<TH2F>(strName3, strName4, 90, -45, 45, 1500, 0., 500.);
+            fh_tofd_TotPm[j] = R3B::root_owned<TH2F>(strName3, strName4, 100, -50, 50, 1500, 0., 500.);
             fh_tofd_TotPm[j]->GetXaxis()->SetTitle("Bar number");
             fh_tofd_TotPm[j]->GetYaxis()->SetTitle("ToT / ns");
             fh_tofd_TotPm[j]->GetYaxis()->SetTitleOffset(1.1);
@@ -190,7 +182,7 @@ InitStatus R3BTofDOnlineSpectra::Init()
             sprintf(strName5, "tofd_ToT_coinc_plane_%d", j + 1);
             char strName6[255];
             sprintf(strName6, "Tofd ToT coinc plane %d", j + 1);
-            fh_tofd_TotPm_coinc[j] = R3B::root_owned<TH2F>(strName5, strName6, 90, -45, 45, 1500, 0., 500.);
+            fh_tofd_TotPm_coinc[j] = R3B::root_owned<TH2F>(strName5, strName6, 100, -50, 50, 1500, 0., 500.);
             fh_tofd_TotPm_coinc[j]->GetXaxis()->SetTitle("Bar number");
             fh_tofd_TotPm_coinc[j]->GetYaxis()->SetTitle("ToT / ns");
             fh_tofd_TotPm_coinc[j]->GetYaxis()->SetTitleOffset(1.1);
@@ -205,7 +197,7 @@ InitStatus R3BTofDOnlineSpectra::Init()
             sprintf(strName7, "tofd_multihit_plane_%d", j + 1);
             char strName8[255];
             sprintf(strName8, "Tofd multihit plane %d", j + 1);
-            fh_tofd_multihit[j] = R3B::root_owned<TH2F>(strName7, strName8, 90, -45., 45., 30, 0, 30);
+            fh_tofd_multihit[j] = R3B::root_owned<TH2F>(strName7, strName8, 100, -50., 50., 30, 0, 30);
             fh_tofd_multihit[j]->GetXaxis()->SetTitle("Bar number");
             fh_tofd_multihit[j]->GetYaxis()->SetTitle("Multihit");
             fh_tofd_multihit[j]->GetYaxis()->SetTitleOffset(1.);
@@ -220,7 +212,7 @@ InitStatus R3BTofDOnlineSpectra::Init()
             sprintf(strName9, "tofd_multihit_coinc_plane_%d", j + 1);
             char strName10[255];
             sprintf(strName10, "Tofd multihit coinc plane %d", j + 1);
-            fh_tofd_multihit_coinc[j] = R3B::root_owned<TH2F>(strName9, strName10, 45, 0., 45., 30, 0, 30);
+            fh_tofd_multihit_coinc[j] = R3B::root_owned<TH2F>(strName9, strName10, 50, 0., 50., 30, 0, 30);
             fh_tofd_multihit_coinc[j]->GetXaxis()->SetTitle("Bar number");
             fh_tofd_multihit_coinc[j]->GetYaxis()->SetTitle("Multihit");
             fh_tofd_multihit_coinc[j]->GetYaxis()->SetTitleOffset(1.);
@@ -230,6 +222,21 @@ InitStatus R3BTofDOnlineSpectra::Init()
             fh_tofd_multihit_coinc[j]->GetXaxis()->SetTitleSize(0.045);
             fh_tofd_multihit_coinc[j]->GetYaxis()->SetLabelSize(0.045);
             fh_tofd_multihit_coinc[j]->GetYaxis()->SetTitleSize(0.045);
+
+            char strName13[255];
+            sprintf(strName13, "tofd_numHits_top_vs_bottom_%d", j + 1);
+            char strName14[255];
+            sprintf(strName14, "Tofd numHitsMapped top vs bottom %d", j + 1);
+            fh_num_side[j] = R3B::root_owned<TH2F>(strName13, strName14, 50, 0., 50., 50, 0, 50);
+            fh_num_side[j]->GetXaxis()->SetTitle("Num hits up");
+            fh_num_side[j]->GetYaxis()->SetTitle("Num hits bottom");
+            fh_num_side[j]->GetYaxis()->SetTitleOffset(1.);
+            fh_num_side[j]->GetXaxis()->CenterTitle(true);
+            fh_num_side[j]->GetYaxis()->CenterTitle(true);
+            fh_num_side[j]->GetXaxis()->SetLabelSize(0.045);
+            fh_num_side[j]->GetXaxis()->SetTitleSize(0.045);
+            fh_num_side[j]->GetYaxis()->SetLabelSize(0.045);
+            fh_num_side[j]->GetYaxis()->SetTitleSize(0.045);
 
             if (j < fNofPlanes - 1)
             {
@@ -249,51 +256,6 @@ InitStatus R3BTofDOnlineSpectra::Init()
                 fh_tofd_dt[j]->GetYaxis()->SetLabelSize(0.045);
                 fh_tofd_dt[j]->GetYaxis()->SetTitleSize(0.045);
             }
-
-            char strName13[255];
-            sprintf(strName13, "tofd_numHits_top_vs_bottom_%d", j + 1);
-            char strName14[255];
-            sprintf(strName14, "Tofd numHitsMapped top vs bottom %d", j + 1);
-            fh_num_side[j] = R3B::root_owned<TH2F>(strName13, strName14, 45, 0., 45., 45, 0, 45);
-            fh_num_side[j]->GetXaxis()->SetTitle("Num hits up");
-            fh_num_side[j]->GetYaxis()->SetTitle("Num hits bottom");
-            fh_num_side[j]->GetYaxis()->SetTitleOffset(1.);
-            fh_num_side[j]->GetXaxis()->CenterTitle(true);
-            fh_num_side[j]->GetYaxis()->CenterTitle(true);
-            fh_num_side[j]->GetXaxis()->SetLabelSize(0.045);
-            fh_num_side[j]->GetXaxis()->SetTitleSize(0.045);
-            fh_num_side[j]->GetYaxis()->SetLabelSize(0.045);
-            fh_num_side[j]->GetYaxis()->SetTitleSize(0.045);
-
-            sprintf(strName13, "tofd_Ypos_plane_%d", j + 1);
-            sprintf(strName14, "Tofd Ypos for plane %d", j + 1);
-            fh2_tofd_ypos_cal[j] = R3B::root_owned<TH2F>(strName13, strName14, 45, 0, 45, 2000., -50., 50.);
-            fh2_tofd_ypos_cal[j]->GetXaxis()->SetTitle("Bar number");
-            fh2_tofd_ypos_cal[j]->GetYaxis()->SetTitle("Y-position [ns]");
-            fh2_tofd_ypos_cal[j]->GetYaxis()->SetTitleOffset(1.05);
-            fh2_tofd_ypos_cal[j]->GetXaxis()->CenterTitle(true);
-            fh2_tofd_ypos_cal[j]->GetYaxis()->CenterTitle(true);
-            fh2_tofd_ypos_cal[j]->GetXaxis()->SetLabelSize(0.045);
-            fh2_tofd_ypos_cal[j]->GetXaxis()->SetTitleSize(0.045);
-            fh2_tofd_ypos_cal[j]->GetYaxis()->SetLabelSize(0.045);
-            fh2_tofd_ypos_cal[j]->GetYaxis()->SetTitleSize(0.045);
-            cTofd_Y_per_planes->cd(j * 2 + 1);
-            fh2_tofd_ypos_cal[j]->Draw("colz");
-
-            sprintf(strName13, "tofd_timediff_plane_%d", j + 1);
-            sprintf(strName14, "Tofd time diff. per PMT for plane %d", j + 1);
-            fh2_tofd_timedif_cal[j] = R3B::root_owned<TH2F>(strName13, strName14, 90, -45, 45, 2000., -5000., 1000.);
-            fh2_tofd_timedif_cal[j]->GetXaxis()->SetTitle("Bar number");
-            fh2_tofd_timedif_cal[j]->GetYaxis()->SetTitle("PMT_time - Trig_time [ns]");
-            fh2_tofd_timedif_cal[j]->GetYaxis()->SetTitleOffset(1.05);
-            fh2_tofd_timedif_cal[j]->GetXaxis()->CenterTitle(true);
-            fh2_tofd_timedif_cal[j]->GetYaxis()->CenterTitle(true);
-            fh2_tofd_timedif_cal[j]->GetXaxis()->SetLabelSize(0.045);
-            fh2_tofd_timedif_cal[j]->GetXaxis()->SetTitleSize(0.045);
-            fh2_tofd_timedif_cal[j]->GetYaxis()->SetLabelSize(0.045);
-            fh2_tofd_timedif_cal[j]->GetYaxis()->SetTitleSize(0.045);
-            cTofd_Y_per_planes->cd(j * 2 + 2);
-            fh2_tofd_timedif_cal[j]->Draw("colz");
         }
 
         cTofd_planes->cd(1);
@@ -375,19 +337,20 @@ InitStatus R3BTofDOnlineSpectra::Init()
 
         // Adding this canvas to the main folder
         maintofd->Add(cTofd_planes);
-        maintofd->Add(cTofd_Y_per_planes);
     }
 
     if (fHitItems)
     {
+        const int zlim = 22;
+
         TCanvas* cTofd_planes_hit = new TCanvas("TofD_planes_Hit", "TOFD planes HIT data", 20, 20, 1120, 1020);
         cTofd_planes_hit->Divide(5, fNofPlanes);
 
         fh_tofd_Tot_hit.resize(fNofPlanes);
-        fh_tofd_dt_hit.resize(fNofPlanes - 1);
         fh_tofd_multihit_hit.resize(fNofPlanes);
         fh_tofd_bars.resize(fNofPlanes);
         fh_tofd_time_hit.resize(fNofPlanes);
+        fh_tofd_dt_hit.resize(fNofPlanes - 1);
 
         for (Int_t j = 0; j < fNofPlanes; j++)
         {
@@ -395,7 +358,7 @@ InitStatus R3BTofDOnlineSpectra::Init()
             sprintf(strName3, "tofd_hit_Q_plane_%d", j + 1);
             char strName4[255];
             sprintf(strName4, "Tofd hit Charge plane %d", j + 1);
-            fh_tofd_Tot_hit[j] = R3B::root_owned<TH2F>(strName3, strName4, 45, 0, 45, 1000, 0., 12.);
+            fh_tofd_Tot_hit[j] = R3B::root_owned<TH2F>(strName3, strName4, 45, 0, 45, 1000, 0., zlim);
             fh_tofd_Tot_hit[j]->GetXaxis()->SetTitle("BarId");
             fh_tofd_Tot_hit[j]->GetYaxis()->SetTitle("Charge");
             fh_tofd_Tot_hit[j]->GetYaxis()->SetTitleOffset(1.);
@@ -539,66 +502,9 @@ InitStatus R3BTofDOnlineSpectra::Init()
         // Adding this canvas to the main folder
         maintofd->Add(cTofd_planes_hit);
 
-        auto* cToFd_los_h2 = new TCanvas("ToFD_time_Los_time", "ToFD time - Los time", 20, 20, 1120, 1020);
-        cToFd_los_h2->Divide(2, 2);
-        fh_tofd_time_los_h2.resize(fNofPlanes);
-
-        auto* cToFd_los_h2_wt =
-            new TCanvas("ToFD_Los_time_without_trigger", "ToFD time - Los time without trigger", 20, 20, 1120, 1020);
-        cToFd_los_h2_wt->Divide(2, 2);
-        fh2_tofd_time_los_cal.resize(fNofPlanes);
-
-        for (Int_t j = 0; j < fPaddlesPerPlane; j++)
-            fh_tofd_time_los[j].resize(fNofPlanes);
-
-        for (Int_t i = 0; i < fNofPlanes; i++)
-        {
-            char strNameLos_c[455];
-            sprintf(strNameLos_c, "tofd_los_timediff_plane_%d", i + 1);
-            fh_tofd_time_los_h2[i] = R3B::root_owned<TH2F>(strNameLos_c, strNameLos_c, 44, 1, 45, 20000, 40, 190);
-            fh_tofd_time_los_h2[i]->GetXaxis()->SetTitle("Bar");
-            fh_tofd_time_los_h2[i]->GetYaxis()->SetTitle("ToF [ns]");
-            fh_tofd_time_los_h2[i]->GetXaxis()->CenterTitle(true);
-            fh_tofd_time_los_h2[i]->GetYaxis()->CenterTitle(true);
-            cToFd_los_h2->cd(i + 1);
-            gPad->SetLogz();
-            fh_tofd_time_los_h2[i]->Draw("colz");
-
-            char strNameLos_c2[255];
-            snprintf(strNameLos_c2, sizeof(strNameLos_c2), "tofd_los_time_without_trigger_%d", i + 1);
-            fh2_tofd_time_los_cal[i] = R3B::root_owned<TH2F>(strNameLos_c2, strNameLos_c2, 44, 1, 45, 10000, 40, 70);
-            fh2_tofd_time_los_cal[i]->GetXaxis()->SetTitle("Bar");
-            fh2_tofd_time_los_cal[i]->GetYaxis()->SetTitle("ToF [ns]");
-            fh2_tofd_time_los_cal[i]->GetXaxis()->CenterTitle(true);
-            fh2_tofd_time_los_cal[i]->GetYaxis()->CenterTitle(true);
-            cToFd_los_h2_wt->cd(i + 1);
-            gPad->SetLogz();
-            fh2_tofd_time_los_cal[i]->Draw("colz");
-
-            auto cToFd_los = new TCanvas(strNameLos_c, strNameLos_c, 20, 20, 1120, 1020);
-            cToFd_los->Divide(5, 9);
-            for (Int_t j = 0; j < fPaddlesPerPlane; j++)
-            {
-                char strNameLos[255];
-                sprintf(strNameLos, "tofd_los_timediff_bar_%d_plane_%d", j + 1, i + 1);
-                char strNameLos2[255];
-                sprintf(strNameLos2, "Tofd_time - Los_time bar %d plane %d", j + 1, i + 1);
-                fh_tofd_time_los[j][i] = R3B::root_owned<TH1F>(strNameLos, strNameLos2, 20000, 40, 190);
-                fh_tofd_time_los[j][i]->GetXaxis()->SetTitle("ToF [ns]");
-                fh_tofd_time_los[j][i]->GetYaxis()->SetTitle("counts");
-                fh_tofd_time_los[j][i]->SetFillColor(31);
-                cToFd_los->cd(j + 1);
-                fh_tofd_time_los[j][i]->Draw("");
-            }
-            // Adding this canvas to the main folder
-            maintofd->Add(cToFd_los);
-        }
-        maintofd->Add(cToFd_los_h2);
-        maintofd->Add(cToFd_los_h2_wt);
-
         auto cToFd_time_charge = new TCanvas("tofd_time_vs_charge", "", 20, 20, 1120, 1020);
         fh2_tofd_time_vs_charge =
-            R3B::root_owned<TH2F>("fh2_tofd_time_vs_charge", "Time vs Charge", 10000, 50, 150, 1000, 0, 12);
+            R3B::root_owned<TH2F>("fh2_tofd_time_vs_charge", "Time vs Charge", 10000, -200, 0, 1000, 0, zlim);
         fh2_tofd_time_vs_charge->GetXaxis()->SetTitle("ToF [ns]");
         fh2_tofd_time_vs_charge->GetYaxis()->SetTitle("Charge");
         fh2_tofd_time_vs_charge->GetXaxis()->CenterTitle(true);
@@ -607,22 +513,22 @@ InitStatus R3BTofDOnlineSpectra::Init()
         fh2_tofd_time_vs_charge->Draw("colz");
         maintofd->Add(cToFd_time_charge);
 
-        auto cToFd_time_wtrigger_charge = new TCanvas("tofd_time_withoutTrig_vs_charge", "", 20, 20, 1120, 1020);
+        /*auto cToFd_time_wtrigger_charge = new TCanvas("tofd_time_withoutTrig_vs_charge", "", 20, 20, 1120, 1020);
         fh2_tofd_time_wouttrig_vs_charge =
-            R3B::root_owned<TH2F>("fh2_tofd_time_vs_charge_withoutTrig", "Time vs Charge", 10000, 25, 70, 1000, 0, 12);
-        fh2_tofd_time_wouttrig_vs_charge->GetXaxis()->SetTitle("ToF [ns]");
+            R3B::root_owned<TH2F>("fh2_tofd_time_vs_charge_withoutTrig", "Time vs Charge", 10000, 25, 70, 1000, 0,
+        zlim); fh2_tofd_time_wouttrig_vs_charge->GetXaxis()->SetTitle("ToF [ns]");
         fh2_tofd_time_wouttrig_vs_charge->GetYaxis()->SetTitle("Charge");
         fh2_tofd_time_wouttrig_vs_charge->GetXaxis()->CenterTitle(true);
         fh2_tofd_time_wouttrig_vs_charge->GetYaxis()->CenterTitle(true);
         gPad->SetLogz();
         fh2_tofd_time_wouttrig_vs_charge->Draw("colz");
-        maintofd->Add(cToFd_time_wtrigger_charge);
+        // maintofd->Add(cToFd_time_wtrigger_charge);*/
 
         auto cToFd_charge_cor = new TCanvas("tofd_Charge_correlations", "", 20, 20, 1120, 1020);
         cToFd_charge_cor->Divide(2, 1);
         cToFd_charge_cor->cd(1);
-        fh2_tofd_charges13 =
-            R3B::root_owned<TH2F>("fh2_tofd_charge1_vs_charge3", "Charges: Plane1 vs Plane3", 1000, 0, 12, 1000, 0, 12);
+        fh2_tofd_charges13 = R3B::root_owned<TH2F>(
+            "fh2_tofd_charge1_vs_charge3", "Charges: Plane1 vs Plane3", 1000, 0, zlim, 1000, 0, zlim);
         fh2_tofd_charges13->GetXaxis()->SetTitle("Charge-Z P1");
         fh2_tofd_charges13->GetYaxis()->SetTitle("Charge-Z P3");
         fh2_tofd_charges13->GetXaxis()->CenterTitle(true);
@@ -631,8 +537,8 @@ InitStatus R3BTofDOnlineSpectra::Init()
         fh2_tofd_charges13->SetStats(0);
 
         cToFd_charge_cor->cd(2);
-        fh2_tofd_charges24 =
-            R3B::root_owned<TH2F>("fh2_tofd_charge2_vs_charge4", "Charges: Plane2 vs Plane4", 1000, 0, 12, 1000, 0, 12);
+        fh2_tofd_charges24 = R3B::root_owned<TH2F>(
+            "fh2_tofd_charge2_vs_charge4", "Charges: Plane2 vs Plane4", 1000, 0, zlim, 1000, 0, zlim);
         fh2_tofd_charges24->GetXaxis()->SetTitle("Charge-Z P2");
         fh2_tofd_charges24->GetYaxis()->SetTitle("Charge-Z P4");
         fh2_tofd_charges24->GetXaxis()->CenterTitle(true);
@@ -645,8 +551,8 @@ InitStatus R3BTofDOnlineSpectra::Init()
         auto cToFd_charge_cor_v2 = new TCanvas("tofd_Charge_correlations_all", "", 20, 20, 1120, 1020);
         cToFd_charge_cor_v2->Divide(3, 1);
         cToFd_charge_cor_v2->cd(1);
-        fh2_tofd_charges12 =
-            R3B::root_owned<TH2F>("fh2_tofd_charge1_vs_charge2", "Charges: Plane1 vs Plane2", 1000, 0, 12, 1000, 0, 12);
+        fh2_tofd_charges12 = R3B::root_owned<TH2F>(
+            "fh2_tofd_charge1_vs_charge2", "Charges: Plane1 vs Plane2", 1000, 0, zlim, 1000, 0, zlim);
         fh2_tofd_charges12->GetXaxis()->SetTitle("Charge-Z P1");
         fh2_tofd_charges12->GetYaxis()->SetTitle("Charge-Z P2");
         fh2_tofd_charges12->GetXaxis()->CenterTitle(true);
@@ -655,8 +561,8 @@ InitStatus R3BTofDOnlineSpectra::Init()
         fh2_tofd_charges12->SetStats(0);
 
         cToFd_charge_cor_v2->cd(2);
-        fh2_tofd_charges23 =
-            R3B::root_owned<TH2F>("fh2_tofd_charge2_vs_charge3", "Charges: Plane2 vs Plane3", 1000, 0, 12, 1000, 0, 12);
+        fh2_tofd_charges23 = R3B::root_owned<TH2F>(
+            "fh2_tofd_charge2_vs_charge3", "Charges: Plane2 vs Plane3", 1000, 0, zlim, 1000, 0, zlim);
         fh2_tofd_charges23->GetXaxis()->SetTitle("Charge-Z P2");
         fh2_tofd_charges23->GetYaxis()->SetTitle("Charge-Z P3");
         fh2_tofd_charges23->GetXaxis()->CenterTitle(true);
@@ -665,31 +571,29 @@ InitStatus R3BTofDOnlineSpectra::Init()
         fh2_tofd_charges23->SetStats(0);
 
         cToFd_charge_cor_v2->cd(3);
-        fh2_tofd_charges34 =
-            R3B::root_owned<TH2F>("fh2_tofd_charge3_vs_charge4", "Charges: Plane3 vs Plane4", 1000, 0, 12, 1000, 0, 12);
+        fh2_tofd_charges34 = R3B::root_owned<TH2F>(
+            "fh2_tofd_charge3_vs_charge4", "Charges: Plane3 vs Plane4", 1000, 0, zlim, 1000, 0, zlim);
         fh2_tofd_charges34->GetXaxis()->SetTitle("Charge-Z P3");
         fh2_tofd_charges34->GetYaxis()->SetTitle("Charge-Z P4");
         fh2_tofd_charges34->GetXaxis()->CenterTitle(true);
         fh2_tofd_charges34->GetYaxis()->CenterTitle(true);
         fh2_tofd_charges34->Draw("colz");
         fh2_tofd_charges34->SetStats(0);
-
         maintofd->Add(cToFd_charge_cor_v2);
 
         auto cToFd_zcharge = new TCanvas("tofd_Charge_Z", "", 20, 20, 1120, 1020);
-        fh1_Zcharge = R3B::root_owned<TH1F>("fh1_tofd_chargeZ", "Charges Z from Plane 1", 1000, 0, 12);
+        fh1_Zcharge = R3B::root_owned<TH1F>("fh1_tofd_chargeZ", "Charges Z from Plane 1", 1000, 0, zlim);
         fh1_Zcharge->GetXaxis()->SetTitle("Charge-Z");
         fh1_Zcharge->GetYaxis()->SetTitle("Counts");
         fh1_Zcharge->GetXaxis()->CenterTitle(true);
         fh1_Zcharge->GetYaxis()->CenterTitle(true);
         fh1_Zcharge->SetFillColor(31);
         fh1_Zcharge->Draw("");
-
         maintofd->Add(cToFd_zcharge);
 
         auto cToFd_zcharge_tpat = new TCanvas("Tofd_chargeZ_vs_tpat", "Charges Z vs tpat", 10, 10, 500, 500);
         fh2_zcharge_tpat =
-            R3B::root_owned<TH2F>("fh2_Tofd_chargeZ_vs_tpat", "Charges Z vs tpat", 17, -0.5, 16.5, 1000, 0, 12);
+            R3B::root_owned<TH2F>("fh2_Tofd_chargeZ_vs_tpat", "Charges Z vs tpat", 17, -0.5, 16.5, 1000, 0, zlim);
         fh2_zcharge_tpat->GetXaxis()->SetTitle("Tpat");
         fh2_zcharge_tpat->GetYaxis()->SetTitle("Charge-Z");
         fh2_zcharge_tpat->GetXaxis()->CenterTitle(true);
@@ -697,8 +601,57 @@ InitStatus R3BTofDOnlineSpectra::Init()
         fh2_zcharge_tpat->GetYaxis()->SetTitleOffset(1.2);
         fh2_zcharge_tpat->GetXaxis()->SetTitleOffset(1.2);
         fh2_zcharge_tpat->Draw("colz");
-
         maintofd->Add(cToFd_zcharge_tpat);
+
+        // Canvas to display the position per plane ---------------
+        auto* cTofd_Pos_per_planes =
+            new TCanvas("TofD_pos_planes_Hit", "TOFD: pos per plane with HIT data", 10, 10, 1100, 1000);
+        cTofd_Pos_per_planes->Divide(2, 2);
+
+        fh_tofd_pos_hit.resize(fNofPlanes);
+
+        for (Int_t i = 0; i < fNofPlanes; i++)
+        {
+            char strName13[255];
+            char strName14[255];
+            sprintf(strName13, "tofd_pos_plane_%d", i + 1);
+            sprintf(strName14, "Tofd pos for plane %d", i + 1);
+            fh_tofd_pos_hit[i] = R3B::root_owned<TH2F>(strName13, strName14, 200, -100, 100, 200., -50., 50.);
+            fh_tofd_pos_hit[i]->GetXaxis()->SetTitle("X-position [cm]");
+            fh_tofd_pos_hit[i]->GetYaxis()->SetTitle("Y-position [cm]");
+            fh_tofd_pos_hit[i]->GetYaxis()->SetTitleOffset(1.05);
+            fh_tofd_pos_hit[i]->GetXaxis()->CenterTitle(true);
+            fh_tofd_pos_hit[i]->GetYaxis()->CenterTitle(true);
+            fh_tofd_pos_hit[i]->GetXaxis()->SetLabelSize(0.045);
+            fh_tofd_pos_hit[i]->GetXaxis()->SetTitleSize(0.045);
+            fh_tofd_pos_hit[i]->GetYaxis()->SetLabelSize(0.045);
+            fh_tofd_pos_hit[i]->GetYaxis()->SetTitleSize(0.045);
+            cTofd_Pos_per_planes->cd(i + 1);
+            gPad->SetLogz();
+            fh_tofd_pos_hit[i]->Draw("colz");
+        }
+        maintofd->Add(cTofd_Pos_per_planes);
+
+        // Canvas to display the time of flight per plane ---------------
+        auto* cTofd_ToF_per_planes =
+            new TCanvas("TofD_ToF_planes_Hit", "TOFD: ToF per plane with HIT data", 10, 10, 1100, 1000);
+        cTofd_ToF_per_planes->Divide(2, 2);
+
+        fh_tofd_time_los.resize(fNofPlanes);
+        for (Int_t i = 0; i < fNofPlanes; i++)
+        {
+            char strNameLos_c[455];
+            sprintf(strNameLos_c, "tofd_los_timediff_plane_%d", i + 1);
+            fh_tofd_time_los[i] = R3B::root_owned<TH2F>(strNameLos_c, strNameLos_c, 44, 0.5, 44.5, 4000, -200, 200);
+            fh_tofd_time_los[i]->GetXaxis()->SetTitle("Bar");
+            fh_tofd_time_los[i]->GetYaxis()->SetTitle("ToF [ns]");
+            fh_tofd_time_los[i]->GetXaxis()->CenterTitle(true);
+            fh_tofd_time_los[i]->GetYaxis()->CenterTitle(true);
+            cTofd_ToF_per_planes->cd(i + 1);
+            gPad->SetLogz();
+            fh_tofd_time_los[i]->Draw("colz");
+        }
+        maintofd->Add(cTofd_ToF_per_planes);
     }
 
     run->AddObject(maintofd);
@@ -714,39 +667,40 @@ InitStatus R3BTofDOnlineSpectra::Init()
 void R3BTofDOnlineSpectra::Reset_Histo()
 {
     R3BLOG(info, "");
-    for (int i = 0; i < fNofPlanes; i++)
+    if (fCalItems)
     {
-        fh_tofd_channels[i]->Reset();
-        fh_tofd_multihit[i]->Reset();
-        fh_tofd_TotPm[i]->Reset();
-        fh_tofd_multihit_coinc[i]->Reset();
-        fh_tofd_TotPm_coinc[i]->Reset();
-        fh2_tofd_ypos_cal[i]->Reset();
-        fh2_tofd_timedif_cal[i]->Reset();
+        for (int i = 0; i < fNofPlanes; i++)
+        {
+            fh_tofd_channels[i]->Reset();
+            fh_tofd_TotPm[i]->Reset();
+            fh_tofd_TotPm_coinc[i]->Reset();
+            fh_tofd_multihit[i]->Reset();
+            fh_tofd_multihit_coinc[i]->Reset();
+            fh_num_side[i]->Reset();
+        }
+        for (int i = 0; i < fNofPlanes - 1; i++)
+        {
+            fh_tofd_dt[i]->Reset();
+        }
     }
-    fh_tofd_dt[0]->Reset();
-    fh_tofd_dt[1]->Reset();
-    fh_tofd_dt[2]->Reset();
-
     if (fHitItems)
     {
         for (int i = 0; i < fNofPlanes; i++)
         {
             fh_tofd_Tot_hit[i]->Reset();
-            fh_tofd_time_hit[i]->Reset();
             fh_tofd_multihit_hit[i]->Reset();
             fh_tofd_bars[i]->Reset();
-            fh_tofd_time_los_h2[i]->Reset();
-            fh2_tofd_time_los_cal[i]->Reset();
-            for (Int_t j = 0; j < fPaddlesPerPlane; j++)
-                fh_tofd_time_los[j][i]->Reset();
+            fh_tofd_time_hit[i]->Reset();
+            fh_tofd_pos_hit[i]->Reset();
+            fh_tofd_time_los[i]->Reset();
         }
+
         for (int i = 0; i < fNofPlanes - 1; i++)
         {
             fh_tofd_dt_hit[i]->Reset();
         }
         fh2_tofd_time_vs_charge->Reset();
-        fh2_tofd_time_wouttrig_vs_charge->Reset();
+        // fh2_tofd_time_wouttrig_vs_charge->Reset();
         fh2_tofd_charges13->Reset();
         fh2_tofd_charges24->Reset();
         fh2_tofd_charges12->Reset();
@@ -853,7 +807,7 @@ void R3BTofDOnlineSpectra::Exec(Option_t* option)
         }
     }
 
-    std::vector<double> fTof_without_trig(44, 0.);
+    // std::vector<double> fTof_without_trig(44, 0.);
     if (fCalItems)
     {
         UInt_t vmultihits[fNofPlanes + 1][fPaddlesPerPlane];
@@ -1084,30 +1038,29 @@ void R3BTofDOnlineSpectra::Exec(Option_t* option)
 
                 if (std::abs(dt_mod) < fC_bar_coincidence_ns * 10.)
                 {
-                    int iPlane = topc->GetDetectorId(); // 1..n
-                    int iBar = topc->GetBarId();        // 1..n
-                    // Histograms to display Y position
-                    fh2_tofd_ypos_cal[iPlane - 1]->Fill(iBar, dt_mod);
-                    fh2_tofd_timedif_cal[iPlane - 1]->Fill(iBar, topc_ns);
-                    fh2_tofd_timedif_cal[iPlane - 1]->Fill(-1 * iBar, botc_ns);
-
-                    if (topc->GetTimeLeading_ns() > 0 && header->GetTStartSimple() > 0)
-                    {
-                        auto tof_without_trig_top =
-                            fTimeStitch->GetTime(topc->GetTimeLeading_ns() - header->GetTStartSimple());
-                        auto tof_without_trig_bot =
-                            fTimeStitch->GetTime(botc->GetTimeLeading_ns() - header->GetTStartSimple());
-                        auto mean_tof_trig = (tof_without_trig_top + tof_without_trig_bot) / 2.;
-                        if (iPlane == 1)
-                        {
-                            fTof_without_trig[iBar - 1] = mean_tof_trig + fTofcor[iBar - 1];
-                            fh2_tofd_time_los_cal[topc->GetDetectorId() - 1]->Fill(topc->GetBarId(),
-                                                                                   fTof_without_trig[iBar - 1]);
-                        }
-                        else
-                            fh2_tofd_time_los_cal[topc->GetDetectorId() - 1]->Fill(
-                                topc->GetBarId(), mean_tof_trig + fTofcor[44 * (topc->GetDetectorId() - 1) + iBar - 1]);
-                    }
+                    // int iPlane = topc->GetDetectorId(); // 1..n
+                    // int iBar = topc->GetBarId();        // 1..n
+                    //  Histograms to display Y position
+                    /*
+                                        if (topc->GetTimeLeading_ns() > 0 && header->GetTStartSimple() > 0)
+                                        {
+                                            auto tof_without_trig_top =
+                                                fTimeStitch->GetTime(topc->GetTimeLeading_ns() -
+                       header->GetTStartSimple()); auto tof_without_trig_bot =
+                                                fTimeStitch->GetTime(botc->GetTimeLeading_ns() -
+                       header->GetTStartSimple()); auto mean_tof_trig = (tof_without_trig_top + tof_without_trig_bot)
+                       / 2.; if (iPlane == 1)
+                                            {
+                                                fTof_without_trig[iBar - 1] = mean_tof_trig + fTofcor[iBar - 1];
+                                                fh_tofd_time_los_cal[topc->GetDetectorId() - 1]->Fill(topc->GetBarId(),
+                                                                                                       fTof_without_trig[iBar
+                       - 1]);
+                                            }
+                                            else
+                                                fh_tofd_time_los_cal[topc->GetDetectorId() - 1]->Fill(
+                                                    topc->GetBarId(), mean_tof_trig + fTofcor[44 *
+                       (topc->GetDetectorId() - 1) + iBar - 1]);
+                                        }*/
                 }
 
                 if (std::abs(dt_mod) < fC_bar_coincidence_ns)
@@ -1216,23 +1169,27 @@ void R3BTofDOnlineSpectra::Exec(Option_t* option)
             Double_t randx = (std::rand() / (float)RAND_MAX) - 0.5;
             Int_t ictemp = iCounts[iPlane - 1];
             x[iPlane - 1][ictemp] = hitTofd->GetX() + 2.7 * randx;
+            // cout << "iPlane: " << iPlane << "    iBar: " << hitTofd->GetBarId() << endl;
+            // cout << "X pos: " << hitTofd->GetX() << endl;
             y[iPlane - 1][ictemp] = hitTofd->GetY();
+            // cout << "Y pos: " << hitTofd->GetY() << endl;
             t[iPlane - 1][ictemp] = hitTofd->GetTime();
             q[iPlane - 1][ictemp] = hitTofd->GetEloss();
             bar[iPlane - 1][ictemp] = hitTofd->GetBarId();
             fh_tofd_Tot_hit[iPlane - 1]->Fill(bar[iPlane - 1][ictemp], q[iPlane - 1][ictemp]);
             fh_tofd_time_hit[iPlane - 1]->Fill(bar[iPlane - 1][ictemp], t[iPlane - 1][ictemp]);
             fh_tofd_bars[iPlane - 1]->Fill(hitTofd->GetBarId());
-            fh_tofd_time_los_h2[iPlane - 1]->Fill(hitTofd->GetBarId(), hitTofd->GetTof());
-            fh_tofd_time_los[hitTofd->GetBarId() - 1][iPlane - 1]->Fill(hitTofd->GetTof());
+            fh_tofd_time_los[iPlane - 1]->Fill(hitTofd->GetBarId(), hitTofd->GetTof() + 0.);
+            fh_tofd_pos_hit[iPlane - 1]->Fill(x[iPlane - 1][ictemp], y[iPlane - 1][ictemp]);
             if (iPlane == 1)
             {
-                fh2_tofd_time_vs_charge->Fill(hitTofd->GetTof(), hitTofd->GetEloss());
-                fh2_tofd_time_wouttrig_vs_charge->Fill(fTof_without_trig[hitTofd->GetBarId() - 1], hitTofd->GetEloss());
+                fh2_tofd_time_vs_charge->Fill(hitTofd->GetTof() + 0., hitTofd->GetEloss());
+                // fh2_tofd_time_wouttrig_vs_charge->Fill(fTof_without_trig[hitTofd->GetBarId() - 1],
+                // hitTofd->GetEloss());
             }
 
             if (hitTofd->GetEloss() > charges[iPlane - 1])
-                charges[iPlane - 1] = hitTofd->GetEloss() - 0.2;
+                charges[iPlane - 1] = hitTofd->GetEloss();
 
             iCounts[iPlane - 1] += 1;
             nMulti[iPlane - 1] += 1;
@@ -1246,9 +1203,13 @@ void R3BTofDOnlineSpectra::Exec(Option_t* option)
             fh2_tofd_charges12->Fill(charges[0], charges[1]);
             if (abs(charges[0] - charges[1]) < 0.5)
             {
-                auto ZCharge =
-                    0.6213293 + 0.65953563445425 * TMath::Sqrt(charges[0] * charges[1]) +
-                    0.039440822 * TMath::Sqrt(charges[0] * charges[1]) * TMath::Sqrt(charges[0] * charges[1]);
+                // auto ZCharge =
+                //     0.6213293 + 0.65953563445425 * TMath::Sqrt(charges[0] * charges[1]) +
+                //     0.039440822 * TMath::Sqrt(charges[0] * charges[1]) * TMath::Sqrt(charges[0] * charges[1]);
+
+                // auto ZCharge = TMath::Sqrt(charges[0] * charges[1]);
+                auto ZCharge = (charges[0] + charges[1]) / 2.;
+                // ZCharge = pow(ZCharge,0.8) / pow(6,0.8) * 6.;
                 fh1_Zcharge->Fill(ZCharge);
                 for (const auto& itpat : tpatindex)
                     fh2_zcharge_tpat->Fill(itpat, ZCharge);
@@ -1302,14 +1263,12 @@ void R3BTofDOnlineSpectra::FinishTask()
     {
         for (Int_t i = 0; i < fNofPlanes; i++)
         {
+            fh_tofd_channels[i]->Write();
             fh_tofd_TotPm[i]->Write();
             fh_tofd_TotPm_coinc[i]->Write();
-            fh_tofd_channels[i]->Write();
-            fh_num_side[i]->Write();
             fh_tofd_multihit[i]->Write();
             fh_tofd_multihit_coinc[i]->Write();
-            fh2_tofd_ypos_cal[i]->Write();
-            fh2_tofd_timedif_cal[i]->Write();
+            fh_num_side[i]->Write();
         }
         for (Int_t i = 0; i < fNofPlanes - 1; i++)
         {
@@ -1321,19 +1280,18 @@ void R3BTofDOnlineSpectra::FinishTask()
         for (Int_t i = 0; i < fNofPlanes; i++)
         {
             fh_tofd_Tot_hit[i]->Write();
-            fh_tofd_time_hit[i]->Write();
             fh_tofd_multihit_hit[i]->Write();
             fh_tofd_bars[i]->Write();
             fh_tofd_time_hit[i]->Write();
-            fh_tofd_time_los_h2[i]->Write();
-            fh2_tofd_time_los_cal[i]->Write();
+            fh_tofd_pos_hit[i]->Write();
+            fh_tofd_time_los[i]->Write();
         }
         for (Int_t i = 0; i < fNofPlanes - 1; i++)
         {
             fh_tofd_dt_hit[i]->Write();
         }
         fh2_tofd_time_vs_charge->Write();
-        fh2_tofd_time_wouttrig_vs_charge->Write();
+        // fh2_tofd_time_wouttrig_vs_charge->Write();
         fh2_tofd_charges13->Write();
         fh2_tofd_charges24->Write();
         fh2_tofd_charges12->Write();

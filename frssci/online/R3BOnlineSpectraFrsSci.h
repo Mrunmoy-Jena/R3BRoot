@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -143,10 +143,12 @@ class R3BOnlineSpectraFrsSci : public FairTask
     // Canvas at Tcal level
     TCanvas* cTcal_Pos;
     TCanvas* cTcal_Tof;
+    TCanvas* cTcal_DTcal;
 
     // Histograms at Tcal level
-    TH1D** fh1_Tcal1Hit_PosRaw; // [fNbDets]
-    TH1D** fh1_Tcal1Hit_TofRaw; // [fNbTofs]
+    TH1D** fh1_Tcal1Hit_PosRaw;    // [fNbDets]
+    TH1D** fh1_Tcal1Hit_TofRaw;    // [fNbTofs]
+    TH1D** fh1_Tcal1Hit_DeltaTcal; // [fNbDets*(NbPmts-1)] TPmt_i -TPmt_ref
 
     // Canvas at Cal level
     TCanvas* cCal_PosRaw;

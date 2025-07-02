@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -17,8 +17,7 @@
 // -----             Created 01/06/18 by J.L. Rodriguez-Sanchez    -----
 // ----------------------------------------------------------------------
 
-#ifndef R3BAmsStripCal2Hit_H
-#define R3BAmsStripCal2Hit_H 1
+#pragma once
 
 #include "FairTask.h"
 
@@ -28,6 +27,8 @@
 
 #include "TVector3.h"
 #include <Rtypes.h>
+
+#include "TH1F.h"
 
 class TClonesArray;
 class R3BAmsMappingPar;
@@ -106,5 +107,3 @@ class R3BAmsStripCal2Hit : public FairTask
     // Class definition
     ClassDef(R3BAmsStripCal2Hit, 1)
 };
-
-#endif

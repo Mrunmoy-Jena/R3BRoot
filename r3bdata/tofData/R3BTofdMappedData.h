@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -11,16 +11,15 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BTOFDMAPPEDITEM_H
-#define R3BTOFDMAPPEDITEM_H
+#pragma once
 
-#include "TObject.h"
+#include <TObject.h>
 
 class R3BTofdMappedData : public TObject
 {
   public:
     R3BTofdMappedData();
-    R3BTofdMappedData(UInt_t, UInt_t, UInt_t, UInt_t, UInt_t, UInt_t);
+    explicit R3BTofdMappedData(UInt_t, UInt_t, UInt_t, UInt_t, UInt_t, UInt_t);
 
     UInt_t GetDetectorId() const;
     UInt_t GetSideId() const;
@@ -38,7 +37,5 @@ class R3BTofdMappedData : public TObject
     UInt_t fTimeFine;
 
   public:
-    ClassDef(R3BTofdMappedData, 1)
+    ClassDef(R3BTofdMappedData, 1);
 };
-
-#endif

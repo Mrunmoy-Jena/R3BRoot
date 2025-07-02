@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -18,9 +18,6 @@
 
 #pragma once
 
-#define N_TOFD_HIT_PLANE_MAX 4
-#define N_TOFD_HIT_PADDLE_MAX 44
-
 #include <map>
 
 #include <FairTask.h>
@@ -28,7 +25,8 @@
 #include <memory>
 #include <string.h>
 
-class R3BTofDHitPar;
+#include "R3BTofDHitPar.h"
+
 class TClonesArray;
 class R3BEventHeader;
 class R3BTofDMappingPar;

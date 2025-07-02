@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -58,7 +58,7 @@ class R3BCalifaCrystalCalPar : public FairParGenericSet
     inline void SetCryCalParams(Float_t cc, int cry)
     {
         assert(std::clamp(cry, 1, fNumCrystals * fNumParamsFit) == cry && "Number of crystal out of range");
-        fCryCalParams->AddAt(cc, cry);
+        fCryCalParams->AddAt(cc, cry - 1);
     }
 
     /** Create more Methods if you need them! **/

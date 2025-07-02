@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -23,7 +23,9 @@ R3BFootHitData::R3BFootHitData(uint8_t detid,
                                double pos,
                                TVector3 master,
                                double energy,
-                               uint16_t mulstrip)
+                               uint16_t mulstrip,
+                               double eta,
+                               double zcharge)
     : fDetId(detid)
     , fNbHit(nbhit)
     , fPos(pos)
@@ -32,6 +34,8 @@ R3BFootHitData::R3BFootHitData(uint8_t detid,
     , fmaster(master)
     , fEnergy(energy)
     , fMulStrip(mulstrip)
+    , fEta(eta)
+    , fZCharge(zcharge)
 {
 }
 
@@ -45,6 +49,8 @@ R3BFootHitData::R3BFootHitData(const R3BFootHitData& right)
     , fmaster(right.fmaster)
     , fEnergy(right.fEnergy)
     , fMulStrip(right.fMulStrip)
+    , fEta(right.fEta)
+    , fZCharge(right.fZCharge)
 {
 }
 

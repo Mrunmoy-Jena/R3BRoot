@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -19,20 +19,16 @@ class FairContainer;
 
 class R3BTofDContFact : public FairContFact
 {
+  public:
+    R3BTofDContFact();
+
+    virtual ~R3BTofDContFact() = default;
+
+    FairParSet* createContainer(FairContainer*) override;
+
   private:
     void setAllContainers();
 
   public:
-    /**
-     * Default constructor.
-     */
-    R3BTofDContFact();
-
-    /**
-     * Destructor.
-     */
-    ~R3BTofDContFact() {}
-
-    FairParSet* createContainer(FairContainer*);
-    ClassDef(R3BTofDContFact, 0) // Factory for all TofD parameter containers
+    ClassDefOverride(R3BTofDContFact, 0) // Factory for all TofD parameter containers
 };

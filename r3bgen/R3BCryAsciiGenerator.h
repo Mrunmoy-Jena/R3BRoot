@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -18,11 +18,10 @@
 // -----  https://nuclear.llnl.gov/simulation/                         -----
 // -------------------------------------------------------------------------
 
-#ifndef R3BCryAsciiGenerator_H
-#define R3BCryAsciiGenerator_H 1
+#pragma once
 
-#include "FairGenerator.h"
-#include "TString.h"
+#include <FairGenerator.h>
+#include <TString.h>
 #include <fstream>
 #include <iostream>
 #include <sstream>
@@ -40,7 +39,7 @@ class R3BCryAsciiGenerator : public FairGenerator
     /** Standard constructor.
      ** @param fileName The input file name
      **/
-    explicit R3BCryAsciiGenerator(std::string fileName);
+    explicit R3BCryAsciiGenerator(const std::string& fileName);
     explicit R3BCryAsciiGenerator(const TString& fileName);
     explicit R3BCryAsciiGenerator(const char* fileName);
 
@@ -59,13 +58,12 @@ class R3BCryAsciiGenerator : public FairGenerator
   private:
     TString fFileName;
     ifstream infile;
-    float fTopDist; // Origin of cosmic rays in the Y-coordinate
+    float fTopDist = 0.; // Origin of cosmic rays in the Y-coordinate
 
     /** Private method CloseInput. Closes the input file properly.
      ** Called from destructor and from ReadEvent. **/
     void CloseInput();
 
+  public:
     ClassDefOverride(R3BCryAsciiGenerator, 0);
 };
-
-#endif

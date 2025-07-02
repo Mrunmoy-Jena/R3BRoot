@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -11,13 +11,14 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#include "R3BMwpc2ContFact.h"
-#include "R3BMwpc2CalPar.h"
-#include "R3BTGeoPar.h"
+#include <FairRuntimeDb.h>
+#include <TClass.h>
+#include <string>
 
-#include "FairLogger.h"
-#include "FairRuntimeDb.h"
-#include "TClass.h"
+#include "R3BLogger.h"
+#include "R3BMwpc2CalPar.h"
+#include "R3BMwpc2ContFact.h"
+#include "R3BTGeoPar.h"
 
 static R3BMwpc2ContFact gR3BMwpc2ContFact;
 
@@ -50,19 +51,19 @@ FairParSet* R3BMwpc2ContFact::createContainer(FairContainer* c)
     // For an actual context, which is not an empty string and not the default context
     // of this container, the name is concatinated with the context.
 
-    const char* name = c->GetName();
-    LOG(info) << "R3BMwpc2ContFact: Create container name: " << name;
-    FairParSet* p = 0;
-    if (strcmp(name, "mwpc2CalPar") == 0)
+    const std::string name(c->GetName());
+    R3BLOG(info, "Create container name: " << name.c_str());
+
+    FairParSet* p = nullptr;
+    if (name == "mwpc2CalPar")
     {
         p = new R3BMwpc2CalPar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
     }
-    else if (strcmp(name, "Mwpc2GeoPar") == 0)
+    else if (name == "Mwpc2GeoPar")
     {
         p = new R3BTGeoPar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
     }
-
     return p;
 }
 
-ClassImp(R3BMwpc2ContFact);
+ClassImp(R3BMwpc2ContFact)

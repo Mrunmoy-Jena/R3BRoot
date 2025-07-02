@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -137,27 +137,26 @@ class R3BTofDOnlineSpectra : public FairTask
     unsigned long fNEvents = 0;           /**< Event counter. */
     std::vector<double> fTofcor;
 
+    // fCalItems
     std::vector<TH1F*> fh_tofd_channels;
-    std::vector<TH2F*> fh_tofd_multihit;
     std::vector<TH2F*> fh_tofd_TotPm;
-    std::vector<TH2F*> fh_tofd_dt;
-    std::vector<TH2F*> fh_tofd_multihit_coinc;
     std::vector<TH2F*> fh_tofd_TotPm_coinc;
+    std::vector<TH2F*> fh_tofd_multihit;
+    std::vector<TH2F*> fh_tofd_multihit_coinc;
     std::vector<TH2F*> fh_num_side;
-    std::vector<TH1F*> fh_tofd_bars;
+    std::vector<TH2F*> fh_tofd_dt;
+    // fHitItems
     std::vector<TH2F*> fh_tofd_Tot_hit;
-    std::vector<TH2F*> fh_tofd_time_hit;
     std::vector<TH1F*> fh_tofd_multihit_hit;
+    std::vector<TH1F*> fh_tofd_bars;
+    std::vector<TH2F*> fh_tofd_time_hit;
     std::vector<TH2F*> fh_tofd_dt_hit;
-    std::vector<TH2F*> fh2_tofd_ypos_cal;
-    std::vector<TH2F*> fh2_tofd_timedif_cal;
-
-    std::vector<TH2F*> fh_tofd_time_los_h2;
-    std::vector<TH2F*> fh2_tofd_time_los_cal;
-    std::vector<TH1F*> fh_tofd_time_los[44];
+    std::vector<TH2F*> fh_tofd_pos_hit;
+    std::vector<TH2F*> fh_tofd_time_los;
+    // std::vector<TH2F*> fh_tofd_time_los_cal;
 
     TH2F* fh2_tofd_time_vs_charge;
-    TH2F* fh2_tofd_time_wouttrig_vs_charge;
+    // TH2F* fh2_tofd_time_wouttrig_vs_charge;
     TH2F* fh2_tofd_charges13;
     TH2F* fh2_tofd_charges24;
     TH2F* fh2_tofd_charges12;

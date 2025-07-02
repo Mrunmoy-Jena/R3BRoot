@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -75,14 +75,12 @@ Bool_t R3BMosaicReader::R3BRead()
         for (int hits = 0; hits < fData->MOSAIC[mosid].CHIP; hits++)
         {
             int fChipId = fData->MOSAIC[mosid].CHIPv[hits];
-            // R3BLOG_IF(error, fChipId < 1, "Wrong fChipId: " << fChipId);
-            // if (fChipId == 0)
-            //    continue;
 
-            int fAlpideId = map_mosaics[mosid] * 6 + fChipId + 1; // 1-base: 1 --> 24 (6*4)
+            int fAlpideId = map_mosaics[mosid] * fNb_sensors_flex + fChipId + 1; // 1-base
             R3BLOG_IF(error, fAlpideId < 1, "Wrong fAlpideId: " << fAlpideId);
 
-            fAlpideId = map_sensors[fAlpideId - 1];
+            fAlpideId = map_sensors[fAlpideId - 1]; // 1-base
+
             new ((*fArray)[fArray->GetEntriesFast()]) R3BAlpideMappedData(
                 fAlpideId, 0, mosid + 1, fChipId, fData->MOSAIC[mosid].ROWv[hits], fData->MOSAIC[mosid].COLv[hits]);
         }

@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -110,4 +110,4 @@ void R3BFiberMAPMTMapped2CalPar::SetUpdateRate(Int_t a_rate) { fUpdateRate = a_r
 
 void R3BFiberMAPMTMapped2CalPar::SetMinStats(Int_t a_min_stats) { fMinStats = a_min_stats; }
 
-ClassImp(R3BFiberMAPMTMapped2CalPar);
+ClassImp(R3BFiberMAPMTMapped2CalPar)

@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -32,13 +32,11 @@ using namespace std;
 
 R3BCryAsciiGenerator::R3BCryAsciiGenerator()
     : fFileName()
-    , fTopDist(0.0)
 {
 }
 
-R3BCryAsciiGenerator::R3BCryAsciiGenerator(std::string fileName)
+R3BCryAsciiGenerator::R3BCryAsciiGenerator(const std::string& fileName)
     : fFileName(std::move(fileName))
-    , fTopDist(0.0)
 {
     infile.open(fileName);
     if (!infile.is_open())

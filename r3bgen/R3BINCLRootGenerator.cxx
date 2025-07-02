@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -13,7 +13,6 @@
 
 #include "R3BINCLRootGenerator.h"
 #include "FairIon.h"
-#include "FairLogger.h"
 #include "FairPrimaryGenerator.h"
 #include "FairRunSim.h"
 #include "G4NistManager.hh"
@@ -22,38 +21,12 @@
 #include "TRandom.h"
 
 R3BINCLRootGenerator::R3BINCLRootGenerator()
-    : fFileName()
-    , fX(0.)
-    , fY(0.)
-    , fZ(0.)
-    , fPointVtxIsSet(kFALSE)
-    , fDX(0.)
-    , fDY(0.)
-    , fDZ(0.)
-    , fBoxVtxIsSet(kFALSE)
-    , fOnlySpallation(kFALSE)
-    , fOnlyP2pFission(kFALSE)
-    , fOnlyFission(kFALSE)
-    , fEvtRoot(0)
-    , fEvt(0)
 {
+    R3BLOG(fatal, "This event generator must be used with an INCL ROOT file");
 }
 
-R3BINCLRootGenerator::R3BINCLRootGenerator(std::string fileName)
+R3BINCLRootGenerator::R3BINCLRootGenerator(const std::string& fileName)
     : fFileName(std::move(fileName))
-    , fX(0.)
-    , fY(0.)
-    , fZ(0.)
-    , fPointVtxIsSet(kFALSE)
-    , fDX(0.)
-    , fDY(0.)
-    , fDZ(0.)
-    , fBoxVtxIsSet(kFALSE)
-    , fOnlySpallation(kFALSE)
-    , fOnlyP2pFission(kFALSE)
-    , fOnlyFission(kFALSE)
-    , fEvtRoot(0)
-    , fEvt(0)
 {
     RegisterIons();
 }
@@ -233,7 +206,7 @@ void R3BINCLRootGenerator::RegisterIons()
                 if (ions.find(pdg) == ions.end())
                 {
                     const Double_t mass = G4NistManager::Instance()->GetIsotopeMass(iZ, iA) / CLHEP::GeV;
-                    LOG(debug) << "R3BINCLRootGenerator: New ion " << iZ << "\t" << iA << "\t" << mass;
+                    R3BLOG(debug, "New ion " << iZ << "\t" << iA << "\t" << mass);
                     ions[pdg] = new FairIon(TString::Format("Ion_%d_%d", iA, iZ), iZ, iA, iZ, 0., mass);
                 }
             }
@@ -263,4 +236,4 @@ void R3BINCLRootGenerator::SetDxDyDz(Double32_t sx, Double32_t sy, Double32_t sz
     fBoxVtxIsSet = kTRUE;
 }
 
-ClassImp(R3BINCLRootGenerator);
+ClassImp(R3BINCLRootGenerator)

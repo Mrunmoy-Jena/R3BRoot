@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -12,8 +12,8 @@
  ******************************************************************************/
 
 // ------------------------------------------------------------------
-// -----            R3BFootHitData header file                  -----
-// -----       Created 16/07/21  by J.L. Rodriguez-Sanchez      -----
+// -----              R3BFootHitData header file                -----
+// -----       Created 16/07/21 by J.L. Rodriguez-Sanchez       -----
 // ------------------------------------------------------------------
 
 #pragma once
@@ -32,17 +32,21 @@ class R3BFootHitData : public TObject
      *@param fDetId     Detector unique identifier
      *@param fNbHit     Number of hits
      *@param fMulStrip  Number of strips with signals
-     *@param fPos         Position in mm, local coordinate (detector frame)
+     *@param fPos       Position in mm, local coordinate (detector frame)
      *@param fTheta     Master: Angle theta [rad] (lab frame)
      *@param fPhi       Master: Angle Phi [rad] (lab frame)
      *@param fEnergy    Total energy deposited by the hit ([GeV] in sim)
+     *@param fEta       Difference between the integer part of the cluster position and the cluster position
+     *@param fZCharge   Ion atomic charge
      **/
     explicit R3BFootHitData(uint8_t detid,
                             uint16_t nbhit,
                             double pos,
                             TVector3 master,
                             double energy,
-                            uint16_t mulstrip = 0);
+                            uint16_t mulstrip = 0,
+                            double eta = 0,
+                            double zcharge = 0);
 
     /** Copy constructor **/
     R3BFootHitData(const R3BFootHitData&);
@@ -61,6 +65,8 @@ class R3BFootHitData : public TObject
     [[nodiscard]] inline const double& GetPhi() const { return fPhi; }
     [[nodiscard]] inline const TVector3 GetPosLab() const { return fmaster; }
     [[nodiscard]] inline const double& GetEnergy() const { return fEnergy; }
+    [[nodiscard]] inline const double& GetEta() const { return fEta; }
+    [[nodiscard]] inline const double& GetZCharge() const { return fZCharge; }
 
   protected:
     uint8_t fDetId = 0;
@@ -71,7 +77,9 @@ class R3BFootHitData : public TObject
     TVector3 fmaster;
     double fEnergy = std::nan("");
     uint16_t fMulStrip = 0;
+    double fEta = 0;
+    double fZCharge = std::nan("");
 
   public:
-    ClassDefOverride(R3BFootHitData, 1)
+    ClassDefOverride(R3BFootHitData, 2); // NOLINT
 };

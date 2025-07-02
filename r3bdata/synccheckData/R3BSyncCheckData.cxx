@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -19,6 +19,7 @@ R3BSyncCheckData::R3BSyncCheckData()
     , fMusic(0)
     , fRpc(0)
     , fS2(0)
+    , fCalifa(0)
 {
 }
 
@@ -27,12 +28,14 @@ R3BSyncCheckData::R3BSyncCheckData(uint32_t master,
                                    uint32_t music,
                                    uint32_t rpc,
                                    uint32_t s2,
+                                   uint32_t califa,
                                    std::vector<uint32_t>& foot_input)
     : fMaster(master)
     , fMasterRef(masterref)
     , fMusic(music)
     , fRpc(rpc)
     , fS2(s2)
+    , fCalifa(califa)
 {
     for (auto& val : foot_input)
     {

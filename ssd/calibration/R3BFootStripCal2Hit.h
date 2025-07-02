@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -23,12 +23,14 @@
 #include <FairTask.h>
 
 #include <Rtypes.h>
+#include <TArrayF.h>
 #include <TVector3.h>
 #include <vector>
 
 class TClonesArray;
 class TH1F;
 class R3BFootMappingPar;
+class R3BFootHitPar;
 
 class R3BFootStripCal2Hit : public FairTask
 {
@@ -59,6 +61,9 @@ class R3BFootStripCal2Hit : public FairTask
     /** Virtual method SetParContainers **/
     void SetParContainers() override;
 
+    /** Virtual method SetParContainers **/
+    void SetTimesSigmas(Double_t sigmas) { fTimesSigmas = sigmas; };
+
     /** Accessor for selecting online mode **/
     inline void SetOnline(Bool_t option) { fOnline = option; }
 
@@ -74,17 +79,22 @@ class R3BFootStripCal2Hit : public FairTask
     double fPitch = 157.7;
     double fMiddle = 50.;
     double fThSum = 20.;
+    double fTimesSigmas = 3.;
     int fMaxNumDet = 16;
     int fMaxNumClusters = 10;
+    int fNumParsFit = 2;
     std::vector<double> fDistTarget;
     std::vector<double> fAngleTheta;
     std::vector<double> fAnglePhi;
     std::vector<double> fOffsetX;
     std::vector<double> fOffsetY;
+    std::vector<double> fCharCalPar;
     std::vector<TH1F*> hssd;
+    TArrayF* HitCalParams = nullptr;
 
     std::vector<int> ClusterMult;                 // Cluster multiplicity
     std::vector<std::vector<double>> ClusterPos;  // Position of Cluster from Weighted Average
+    std::vector<std::vector<double>> Eta;         // Decimal part of the average position of the cluster
     std::vector<std::vector<double>> ClusterESum; // Sum of Energies in the Cluster
     // std::vector<std::vector<double>> Nu;       // Nu for Energy/Position correction
     std::vector<std::vector<int>> ClusterNStrip;            // Number of Strips in Cluster
@@ -92,8 +102,10 @@ class R3BFootStripCal2Hit : public FairTask
     std::vector<std::vector<std::vector<double>>> ClusterE; // Energy of Strip in Cluster
 
     R3BFootMappingPar* fMap_Par = nullptr; // Parameter container with mapping
-    TClonesArray* fFootCalData = nullptr;  // Array with FOOT Cal-input data
-    TClonesArray* fFootHitData = nullptr;  // Array with FOOT Hit-output data
+    R3BFootHitPar* fHit_Par = nullptr;     // Parameter container with hit params
+
+    TClonesArray* fFootCalData = nullptr; // Array with FOOT Cal-input data
+    TClonesArray* fFootHitData = nullptr; // Array with FOOT Hit-output data
 
     bool fOnline = false; // Don't store data for online
     Double_t* fChannelPeaks;
@@ -104,7 +116,9 @@ class R3BFootStripCal2Hit : public FairTask
                                double s,
                                TVector3 master,
                                double energy_s,
-                               uint16_t mulS);
+                               uint16_t mulS,
+                               double eta,
+                               double charge);
 
   public:
     // Class definition

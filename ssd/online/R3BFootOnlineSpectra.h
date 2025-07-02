@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -33,6 +33,7 @@
 
 class TClonesArray;
 class R3BEventHeader;
+class R3BFootMappingPar;
 class TH1F;
 class TH2F;
 
@@ -71,6 +72,9 @@ class R3BFootOnlineSpectra : public FairTask
      */
     InitStatus Init() override;
 
+    /** Virtual method SetParContainers **/
+    void SetParContainers() override;
+
     /**
      * Method for event loop implementation.
      * Is called by the framework every time a new event is read.
@@ -96,6 +100,21 @@ class R3BFootOnlineSpectra : public FairTask
      */
     void Reset_FOOT_Histo();
 
+    /*
+     * Method to set the refresh rate of the sigmas
+     */
+
+    void SetSigmaRefreshRate(int rate) { fSigmaRefreshRate = rate; }
+
+    void SetBinParams(double minE, double maxE, double binsE)
+    {
+        fMinE = minE;
+        fMaxE = maxE;
+        fBinsE = binsE;
+    }
+
+    void SetMaxSize(double max) { fMaxSize = max; }
+
     /**
      * Method to set the number of detectors
      */
@@ -109,27 +128,66 @@ class R3BFootOnlineSpectra : public FairTask
     inline void SetTpat(int tpat) { fTpat = tpat; }
 
   private:
+    void SetParameter();
+
     R3BEventHeader* fEventHeader = nullptr; // // Pointer to the R3BEventHeader structure
     TClonesArray* fMappedItems = nullptr;   // Array with mapped items.
     TClonesArray* fCalItems = nullptr;      // Array with cal items.
     TClonesArray* fHitItems = nullptr;      // Array with hit items.
 
+    R3BFootMappingPar* fMap_Par = nullptr; // Parameter container with mapping
+
     int fTrigger = -1; // Trigger value.
     int fTpat = 0;
     int fNEvents = 0; // Event counter.
-    int fNbDet = 16;  // Number of AMS detectors.
+    int fNbDet = 8;   // Number of Foot detectors.
+    int eventNumber = 0;
+    int fSigmaRefreshRate = 5000;
+
+    // Number of bins and limits for energy
+    double fMinE = -100.;
+    double fMaxE = 5000.;
+    double fBinsE = 1000;
+
+    // Maximum size of the cluster (-1 for no maximum)
+    double fMaxSize = -1;
+
+    // Number of posible combinations of correlations
+    int dim = 6;
+
+    // Variables measured by each foot (example of G-249 experiment)
+    std::vector<int> fXNdx = { 0, 2, 5, 7 };
+    std::vector<int> fYNdx = { 1, 3, 4, 6 };
+
+    // Different combinations for correlations
+    std::vector<int> fCorrNdxX;
+    std::vector<int> fCorrNdxY;
 
     // Histograms for map data
     std::vector<TH2F*> fh2_EnergyVsStrip;
     // Histograms for cal data
     std::vector<TH2F*> fh2_EnergyVsStrip_cal;
+    std::vector<TH2F*> fh2_SigmaVsStrip;
     // Histograms for hit data
     std::vector<TH1F*> fh1_pos;
     std::vector<TH1F*> fh1_ene;
+    std::vector<TH2F*> fh2_eta;
 
-    TH2F* fh2_BeamSpot;
-    TH2F* fh2_BeamSpotE;
+    std::vector<TH1F*> fh1_posMax;
+    std::vector<TH1F*> fh1_eneMax;
+    std::vector<TH2F*> fh2_etaMax;
+
+    std::vector<TH2F*> fh2_foot_corr;
     std::vector<TH1F*> fh1_mult;
+    std::vector<TH1F*> fh1_size;
+    std::vector<TH1F*> fh1_charge;
+    std::vector<TH2F*> fh2_energy_corr;
+    std::vector<TH2F*> fh2_pos_charge;
+    std::vector<TH2F*> fh2_energy_corr_max;
+
+    std::vector<TH2F*> fh2_XY_max_corr;
+    std::vector<TH2F*> fh2_XX_max_corr;
+    std::vector<TH2F*> fh2_YY_max_corr;
 
   public:
     ClassDefOverride(R3BFootOnlineSpectra, 1)

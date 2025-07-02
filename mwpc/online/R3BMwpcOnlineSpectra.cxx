@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -77,6 +77,10 @@ InitStatus R3BMwpcOnlineSpectra::Init()
 
     FairRunOnline* run = FairRunOnline::Instance();
     run->GetHttpServer()->Register("", this);
+
+    header = dynamic_cast<R3BEventHeader*>(mgr->GetObject("EventHeader."));
+    R3BLOG_IF(warn, header == nullptr, "EventHeader. not found");
+    R3BLOG_IF(info, header, "EventHeader. found");
 
     // get access to mapped data of mwpcs
     fMapItemsMwpc = dynamic_cast<TClonesArray*>(mgr->GetObject(fNameDet + "MappedData"));
@@ -440,6 +444,26 @@ void R3BMwpcOnlineSpectra::Reset_Histo()
 void R3BMwpcOnlineSpectra::Exec(Option_t* /*option*/)
 {
 
+    // Check for requested trigger (Todo: should be done globablly / somewhere else)
+    if ((fTrigger >= 0) && (header != nullptr) && (header->GetTrigger() != fTrigger))
+        return;
+
+    if (fTpat1 >= 0 && fTpat2 >= 0 && (header))
+    {
+        // fTpat = 1-16; fTpat_bit = 0-15
+        Int_t fTpat_bit1 = fTpat1 - 1;
+        Int_t fTpat_bit2 = fTpat2 - 1;
+        Int_t tpatbin = 0;
+        for (int i = 0; i < 16; i++)
+        {
+            tpatbin = (header->GetTpat() & (1 << i));
+            if (tpatbin != 0 && (i < fTpat_bit1 || i > fTpat_bit2))
+            {
+                return;
+            }
+        }
+    }
+
     if (fMapItemsMwpc && fMapItemsMwpc->GetEntriesFast() > 0)
     {
         Int_t nPadsPerEvent[3];
@@ -519,7 +543,7 @@ void R3BMwpcOnlineSpectra::Exec(Option_t* /*option*/)
         }
     }
 
-    fNEvents += 1;
+    fNEvents++;
     return;
 }
 

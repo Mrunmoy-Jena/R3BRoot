@@ -1,6 +1,6 @@
 ##############################################################################
 #   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    #
-#   Copyright (C) 2019-2024 Members of R3B Collaboration                     #
+#   Copyright (C) 2019-2025 Members of R3B Collaboration                     #
 #                                                                            #
 #             This software is distributed under the terms of the            #
 #                 GNU General Public Licence (GPL) version 3,                #
@@ -34,10 +34,11 @@ set(SRCS
     calibration/R3BAmsMapped2StripCal.cxx
     calibration/R3BAmsStripCal2Hit.cxx
     online/R3BAmsOnlineSpectra.cxx
-    online/R3BAmsCalifaCorrelatedOnlineSpectra.cxx
     online/R3BFootOnlineSpectra.cxx
+    online/R3BAmsCalifaCorrelatedOnlineSpectra.cxx
     pars/R3BFootMappingPar.cxx
     pars/R3BFootCalPar.cxx
+	pars/R3BFootHitPar.cxx
     calibration/R3BFootMapped2StripCal.cxx
     calibration/R3BFootStripCal2Hit.cxx)
 
@@ -68,6 +69,7 @@ set(HEADERS
     online/R3BFootOnlineSpectra.h
     pars/R3BFootMappingPar.h
     pars/R3BFootCalPar.h
+	pars/R3BFootHitPar.h
     calibration/R3BFootMapped2StripCal.h
     calibration/R3BFootStripCal2Hit.h)
 
@@ -88,6 +90,6 @@ add_library_with_dictionary(
     pars
     sim
     DEPENDENCIES
-    R3BTracking R3BTCal)
+    R3BTracking R3BTCal R3BNeulandShared)
 
 add_subdirectory(test)

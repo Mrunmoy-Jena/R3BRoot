@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -17,12 +17,11 @@
 // -----           Fill R3B online histograms             -----
 // ------------------------------------------------------------
 
-#ifndef R3BGeneralOnlineSpectra_H
-#define R3BGeneralOnlineSpectra_H 1
+#pragma once
 
-#include "FairTask.h"
-#include "TCanvas.h"
-#include "TMath.h"
+#include <FairTask.h>
+#include <TCanvas.h>
+#include <TMath.h>
 
 class TH1F;
 class TH2F;
@@ -146,7 +145,5 @@ class R3BGeneralOnlineSpectra : public FairTask
     std::vector<int> tpatbin;
 
   public:
-    ClassDef(R3BGeneralOnlineSpectra, 0)
+    ClassDef(R3BGeneralOnlineSpectra, 0);
 };
-
-#endif

@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -11,10 +11,9 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BROLUMAPPEDITEM_H
-#define R3BROLUMAPPEDITEM_H
+#pragma once
 
-#include "TObject.h"
+#include <TObject.h>
 
 // for the data analysis of ROLU following LOS
 
@@ -25,7 +24,7 @@ class R3BRoluMappedData : public TObject
     R3BRoluMappedData();
 
     // Standard Constructor
-    R3BRoluMappedData(UInt_t, UInt_t, Int_t, UInt_t, UInt_t);
+    explicit R3BRoluMappedData(UInt_t, UInt_t, Int_t, UInt_t, UInt_t);
 
     UInt_t GetDetector() const;
     UInt_t GetChannel() const;
@@ -41,7 +40,6 @@ class R3BRoluMappedData : public TObject
     UInt_t fTimeFine;
 
   public:
-    ClassDef(R3BRoluMappedData, 1)
+    // Class definition
+    ClassDef(R3BRoluMappedData, 1); // NOLINT
 };
-
-#endif // R3BROLUMAPPEDITEM_H

@@ -2,7 +2,7 @@
 
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -43,9 +43,11 @@
 #pragma link C++ class R3BAmsStripCal2Hit+;
 #pragma link C++ class R3BAmsOnlineSpectra+;
 #pragma link C++ class R3BAmsCalifaCorrelatedOnlineSpectra+;
+#pragma link C++ class vector<R3B::DetectorMappedData>+;
 
 #pragma link C++ class R3BFootMappingPar+;
 #pragma link C++ class R3BFootCalPar+;
+#pragma link C++ class R3BFootHitPar+;
 #pragma link C++ class R3BFootMapped2StripCal+;
 #pragma link C++ class R3BFootStripCal2Hit+;
 #pragma link C++ class R3BFootOnlineSpectra+;

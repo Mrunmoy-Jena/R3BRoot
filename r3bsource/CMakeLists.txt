@@ -1,6 +1,6 @@
 ##############################################################################
 #   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    #
-#   Copyright (C) 2019-2024 Members of R3B Collaboration                     #
+#   Copyright (C) 2019-2025 Members of R3B Collaboration                     #
 #                                                                            #
 #             This software is distributed under the terms of the            #
 #                 GNU General Public Licence (GPL) version 3,                #
@@ -18,6 +18,7 @@
 set(INCLUDE_DIRECTORIES
     #cmake-format: sortable
     ${CMAKE_CURRENT_SOURCE_DIR}
+    actaf
     alpide
     ams
     base
@@ -104,13 +105,15 @@ set(SRCS
     foot/R3BFootSiReader.cxx
     alpide/R3BAlpideReader.cxx
     alpide/R3BMosaicReader.cxx
+    alpide/R3BHmpReader.cxx
     music/R3BMusicReader.cxx
     rpc/R3BRpcReader.cxx
     twim/R3BTwimReader.cxx
     tttx/R3BTttxReader.cxx
     musli/R3BMusliReader.cxx
     mwpc/R3BMwpcReader.cxx
-    sync_check/R3BSyncCheckReader.cxx)
+    sync_check/R3BSyncCheckReader.cxx
+    actaf/R3BActafReader.cxx)
 
 set(STRUCT_HEADERS
     base/ext_h101_unpack.h
@@ -170,6 +173,7 @@ set(STRUCT_HEADERS
     foot/ext_h101_foot.h
     alpide/ext_h101_alpide.h
     alpide/ext_h101_mosaic.h
+    alpide/ext_h101_hmp.h
     music/ext_h101_music.h
     twim/ext_h101_twim.h
     tttx/ext_h101_ttt10.h
@@ -181,10 +185,12 @@ set(STRUCT_HEADERS
     trloii/ext_h101_samplosms.h
     pdc/ext_h101_pdc.h
     rpc/ext_h101_rpc.h
-    sync_check/ext_h101_sync_check.h)
+    sync_check/ext_h101_sync_check.h
+    actaf/ext_h101_actaf.h)
 
 set(HEADERS
     base/R3BUcesbSource.h
+    base/R3BUcesbSource2.h
     base/R3BReader.h
     base/R3BUnpackReader.h
     base/utils/R3BUcesbDecl.h
@@ -242,17 +248,20 @@ set(HEADERS
     foot/R3BFootSiReader.h
     alpide/R3BAlpideReader.h
     alpide/R3BMosaicReader.h
+    alpide/R3BHmpReader.h
     music/R3BMusicReader.h
     rpc/R3BRpcReader.h
     tttx/R3BTttxReader.h
     twim/R3BTwimReader.h
     musli/R3BMusliReader.h
     mwpc/R3BMwpcReader.h
-    sync_check/R3BSyncCheckReader.h)
+    sync_check/R3BSyncCheckReader.h
+    actaf/R3BActafReader.h)
 
 set(HEADERS ${STRUCT_HEADERS} ${HEADERS})
 
 set(DIRS
+    actaf
     alpide
     ams
     base

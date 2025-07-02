@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -146,7 +146,7 @@ void create_glad_geo(bool create_flange_windows = false, const char* geoTag = "v
     gGeoMan->Test();
 
     TFile* geoFile = new TFile(geoFileName, "RECREATE");
-    top->Draw();
+    // top->Draw();
     top->Write();
     geoFile->Close();
 

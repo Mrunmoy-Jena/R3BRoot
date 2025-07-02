@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -11,10 +11,10 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BCalifavsFootOnlineSpectra_H
-#define R3BCalifavsFootOnlineSpectra_H 1
+#pragma once
 
 #include "FairTask.h"
+#include "R3BCalifaOnlineSpectra.h"
 #include "TCanvas.h"
 #include "TMath.h"
 #include <array>
@@ -22,11 +22,6 @@
 #include <fstream>
 #include <iostream>
 #include <sstream>
-
-#define Nb_Sides 2
-#define Nb_Rings 5
-#define Nb_Preamps 16
-#define Nb_PreampCh 16
 
 class TClonesArray;
 class TH1F;
@@ -162,5 +157,3 @@ class R3BCalifavsFootOnlineSpectra : public FairTask
   public:
     ClassDef(R3BCalifavsFootOnlineSpectra, 1)
 };
-
-#endif /* R3BCalifavsFootOnlineSpectra_H */

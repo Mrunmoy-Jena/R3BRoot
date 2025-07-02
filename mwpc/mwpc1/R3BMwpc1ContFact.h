@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -11,23 +11,23 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BMwpc1ContFact_H
-#define R3BMwpc1ContFact_H 1
+#pragma once
 
-#include "FairContFact.h"
+#include <FairContFact.h>
 
 class FairContainer;
 
 class R3BMwpc1ContFact : public FairContFact
 {
+  public:
+    R3BMwpc1ContFact();
+    virtual ~R3BMwpc1ContFact() = default;
+
+    FairParSet* createContainer(FairContainer*) override;
+
   private:
     void setAllContainers();
 
   public:
-    R3BMwpc1ContFact();
-    ~R3BMwpc1ContFact() {}
-    FairParSet* createContainer(FairContainer*);
-    ClassDef(R3BMwpc1ContFact, 0) // Factory for all MWPC1 parameter containers
+    ClassDefOverride(R3BMwpc1ContFact, 0); // NOLINT
 };
-
-#endif /* !R3BMwpc1ContFact_H */

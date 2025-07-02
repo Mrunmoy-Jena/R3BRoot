@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -30,7 +30,8 @@
 extern "C"
 {
 #include "ext_data_client.h"
-#include "ext_h101_rolu_online.h"
+// #include "ext_h101_rolu_online.h"
+#include "ext_h101_2rolu_notrig.h"
 }
 
 #define IS_NAN(x) TMath::IsNaN(x)

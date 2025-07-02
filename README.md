@@ -1,10 +1,15 @@
-# R3BRoot Software [![license](https://alfa-ci.gsi.de/shields/badge/license-GPL--3.0-orange.svg)](COPYRIGHT) [![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5549469.svg)](https://doi.org/10.5281/zenodo.5549469)
-
-[![CI-CD](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main.yml) [![Static Analysis](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/static_analysis.yml) [![Validate Codemeta](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/codemeta_validate.yaml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/codemeta_validate.yaml) [![Cleanup Caches on PR Close](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/cleanup_cache.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/cleanup_cache.yml)
+# R3BRoot Software [![license](https://img.shields.io/badge/License-GPLv3-blue.svg)](COPYRIGHT) 
+[![DOI](https://zenodo.org/badge/DOI/10.5281/zenodo.5549469.svg)](https://doi.org/10.5281/zenodo.5549469)
+[![OpenSSF Best Practices](https://www.bestpractices.dev/projects/9851/badge)](https://www.bestpractices.dev/projects/9851)
+[![fair-software.eu](https://img.shields.io/badge/fair--software.eu-%E2%97%8F%20%20%E2%97%8F%20%20%E2%97%8B%20%20%E2%97%8F%20%20%E2%97%8B-yellow)](https://fair-software.eu)
+[![CI-CD](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main.yml)
+[![Static Analysis](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/static_analysis.yml)
+[![Validate Codemeta](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/codemeta_validate.yaml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/codemeta_validate.yaml)
+[![dashboard](https://img.shields.io/badge/dashboard-r3broot-blue?labelColor=gray&style=flat)](https://cdash.gsi.de/index.php?project=R3BRoot)
 
 ## The R3BRoot Framework
 
-The R3BRoot software is based on the FairRoot framework and can be used to perform Monte Carlo simulations and experimental data analysis of the R3B (Reactions with Relativistic Radioactive Beams) nuclear physics experiments at the GSI-FAIR research center (Facility for Antiproton and Ion Research). The user can create simulated data and/or perform analysis with the same framework. Geant3 and Geant4 transport engines are supported, however, the implemented tasks that create simulated data do not depend on a particular Monte Carlo engine. The framework delivers base classes which enable the users to construct their detectors and/or analysis tasks in a simple way, it also delivers some general functionality like track visualization. Moreover, an interface for reading experimental and/or simulated magnetic field maps is also implemented. R3BRoot is a source distribution with recurring releases for macOS and Linux.
+The R3BRoot software is based on the [FairRoot](https://github.com/FairRootGroup/FairRoot) framework and can be used to perform Monte Carlo simulations and experimental data analysis of the R3B (Reactions with Relativistic Radioactive Beams) nuclear physics experiments at the GSI-FAIR research center (Facility for Antiproton and Ion Research). The user can create simulated data and/or perform analysis with the same framework. Geant3 and [Geant4](https://geant4.web.cern.ch/) transport engines are supported, however, the implemented tasks that create simulated data do not depend on a particular Monte Carlo engine. The framework delivers base classes which enable the users to construct their detectors and/or analysis tasks in a simple way, it also delivers some general functionality like track visualization. Moreover, an interface for reading experimental and/or simulated magnetic field maps is also implemented. R3BRoot software is a source distribution with recurring releases for macOS and Linux.
 
 ## Discussion Forum
 
@@ -13,6 +18,10 @@ For the software-related user support you can post a new topic on our [forum](ht
 ## License
 
 R3BRoot is distributed under the terms of the GNU General Public Licence version 3 ([GPLv3](https://github.com/R3BRootGroup/R3BRoot/blob/dev/LICENSE)).
+
+## Code of Conduct
+
+We are committed to fostering a welcoming and inclusive environment in the R3BRoot project. Please take a moment to review our [Code of Conduct](./CODE_OF_CONDUCT.md), which outlines our expectations for all contributors and community members.
 
 ## Release Information
 
@@ -26,15 +35,20 @@ cd R3BRoot
 git clone https://github.com/R3BRootGroup/macros.git
 ~~~
 
+## Using the Project Template
+
+R3BRoot delivers various project templates that can be used as a starting point for anybody who would like to build simulation and reconstruction algorithms. The project Templates are located in the [R3BRoot/template](template) directory.
+
+
 ## Step by Step Installation
 
 ### Required Software
 
 First, you will need to install FairSoft and FairRoot. For more details:
 
-1. Install [FairSoft](https://github.com/FairRootGroup/FairSoft)
+1. Install [FairSoft](https://github.com/FairRootGroup/FairSoft), required version Nov22p1 or later
 
-2. Install [FairRoot](http://fairroot.gsi.de)
+2. Install [FairRoot](http://fairroot.gsi.de), required version 18.2.1 or later
 
 ### Configure and Compile
 
@@ -72,6 +86,14 @@ The R3BRoot project uses clang-format-15 to ensure a common code formatting. The
 ~~~bash
 source util/clang-format-all.sh
 ~~~
+
+## Security Policy
+
+The R3BRoot project is focused on scientific computing and does not involve typical security concerns like handling sensitive data. However, we are committed to maintaining the integrity and quality of our codebase.
+
+If you discover any potential issues with this project, please refer to our [Security Policy](./SECURITY.md) for instructions on how to report them.
+
+Thank you for helping us keep R3BRoot secure and reliable!
 
 ## More Information
 

@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -23,12 +23,11 @@
 #pragma once
 
 #include <FairTask.h>
+#include <TArrayF.h>
+#include <TRandom.h>
 
 #include "R3BCalifaCrystalCalData.h"
 #include "R3BCalifaMappedData.h"
-
-#include <TArrayF.h>
-#include <TRandom.h>
 
 class TClonesArray;
 class R3BCalifaCrystalCalPar;
@@ -37,28 +36,28 @@ class R3BCalifaTotCalPar;
 class R3BCalifaMapped2CrystalCal : public FairTask
 {
   public:
-    /** Default constructor **/
+    // Default constructor
     R3BCalifaMapped2CrystalCal();
 
-    /** Destructor **/
+    // Destructor
     virtual ~R3BCalifaMapped2CrystalCal();
 
-    /** Virtual method Exec **/
-    virtual void Exec(Option_t* option);
+    // Method Exec
+    void Exec(Option_t* /*option*/) override;
 
-    /** Virtual method Reset **/
+    // Virtual method Reset
     virtual void Reset();
 
-    virtual void SetParContainers();
+    void SetParContainers() override;
 
     // Fair specific
-    /** Virtual method Init **/
-    virtual InitStatus Init();
+    // Method Init
+    InitStatus Init() override;
 
-    /** Virtual method ReInit **/
-    virtual InitStatus ReInit();
+    // Method ReInit
+    InitStatus ReInit() override;
 
-    /** Accessor to select online mode **/
+    // Accessor to select online mode
     void SetOnline(Bool_t option) { fOnline = option; }
 
   private:
@@ -69,15 +68,16 @@ class R3BCalifaMapped2CrystalCal : public FairTask
     UInt_t fNumTotParams = 2;
     TArrayF* fCalParams;
     TArrayF* fCalTotParams;
+    std::vector<float> params_tot;
     // Don't store data for online
-    Bool_t fOnline = false;
+    bool fOnline = false;
 
-    R3BCalifaCrystalCalPar* fCal_Par = nullptr;  /**< Parameter container. >*/
-    R3BCalifaTotCalPar* fTotCal_Par = nullptr;   /**< Tot Parameter container. >*/
-    TClonesArray* fCalifaMappedDataCA = nullptr; /**< Array with CALIFA Mapped- input data. >*/
-    TClonesArray* fCalifaCryCalDataCA = nullptr; /**< Array with CALIFA Cal- output data. >*/
+    R3BCalifaCrystalCalPar* fCal_Par = nullptr;  // Parameter container
+    R3BCalifaTotCalPar* fTotCal_Par = nullptr;   // Tot Parameter container
+    TClonesArray* fCalifaMappedDataCA = nullptr; // Array with CALIFA Mapped-> input data
+    TClonesArray* fCalifaCryCalDataCA = nullptr; // Array with CALIFA Cal-> output data
 
-    /** Private method AddCalData **/
+    // Private method AddCalData
     R3BCalifaCrystalCalData* AddCalData(Int_t id,
                                         Double_t energy,
                                         Double_t Nf,
@@ -87,5 +87,5 @@ class R3BCalifaMapped2CrystalCal : public FairTask
 
   public:
     // Class definition
-    ClassDef(R3BCalifaMapped2CrystalCal, 1)
+    ClassDefOverride(R3BCalifaMapped2CrystalCal, 1); // NOLINT
 };

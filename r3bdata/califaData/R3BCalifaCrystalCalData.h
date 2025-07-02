@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -13,7 +13,9 @@
 
 #pragma once
 
+#include <TMath.h>
 #include <TObject.h>
+#include <cmath>
 #include <cstdint>
 #include <iostream>
 #include <string>
@@ -48,7 +50,20 @@ class R3BCalifaCrystalCalData : public TObject
 
     // Accessors with [[nodiscard]]
     [[nodiscard]] inline const uint16_t& GetCrystalId() const { return fCrystalId; }
-    [[nodiscard]] inline const double& GetEnergy() const { return fEnergy; }
+    //[[nodiscard]] inline double GetEnergy() const { return fEnergy ? fEnergy : 10*TMath::Exp(fToT_Energy/950); }
+    [[nodiscard]] inline double GetEnergy() const
+    {
+        if (!std::isnan(fEnergy))
+            return fEnergy;
+        else if (!std::isnan(fToT_Energy))
+            return fToT_Energy;
+        else
+        {
+            std::cout << "tot was nan" << std::endl;
+            return 0.;
+        }
+    }
+    //[[nodiscard]] inline const double& GetEnergy() const { return fEnergy;}
     [[nodiscard]] inline const double& GetNf() const { return fNf; }
     [[nodiscard]] inline const double& GetNs() const { return fNs; }
     [[nodiscard]] inline const ULong64_t& GetTime() const { return fTime; }

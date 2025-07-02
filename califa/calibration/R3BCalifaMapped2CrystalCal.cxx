@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -56,7 +56,6 @@ void R3BCalifaMapped2CrystalCal::SetParContainers()
     {
         R3BLOG(info, "califaCrystalCalPar container opened");
     }
-
     fTotCal_Par = dynamic_cast<R3BCalifaTotCalPar*>(rtdb->getContainer("CalifaTotCalPar"));
     if (!fTotCal_Par)
     {
@@ -108,8 +107,28 @@ void R3BCalifaMapped2CrystalCal::SetParameter()
     // (where barrel is always in [1, 1952]) with an old calibration
 
     constexpr int offset = 2432;
-    auto& cal = *fCalParams; // because (*ptr)[i] is ugly and error-prone
+
+    auto& cal = *fCalParams;
     auto& tot = *fCalTotParams;
+    bool hasDefault = false;
+    params_tot.reserve(tot.GetSize()); // optional optimization if vector size is known
+
+    for (int i = 0; i < tot.GetSize(); ++i)
+    {
+        auto value = tot.GetAt(i);
+
+        if (value == 0)
+            hasDefault = true;
+
+        int fallback = (i % 2 == 0) ? 10000 : 1000; // default thr=10MeV, tau=1000
+        params_tot.push_back(value != 0 ? value : fallback);
+    }
+
+    if (hasDefault)
+    {
+        R3BLOG(info, "Could not find some Tot params, set to default values");
+    }
+
     if (fNumParams != 2 || fNumCrystals < 2 * offset)
     {
         R3BLOG(warn, "Not checking calibration in former proton range.");
@@ -166,17 +185,13 @@ InitStatus R3BCalifaMapped2CrystalCal::ReInit()
     return kSUCCESS;
 }
 
-void R3BCalifaMapped2CrystalCal::Exec(Option_t* option)
+void R3BCalifaMapped2CrystalCal::Exec(Option_t* /*option*/)
 {
     // Reset entries in output arrays, local arrays
     Reset();
 
     // Reading the Input -- Mapped Data --
-    Int_t nHits = fCalifaMappedDataCA->GetEntries();
-    if (!nHits)
-        return;
-
-    R3BCalifaMappedData** mappedData = new R3BCalifaMappedData*[nHits];
+    auto nHits = fCalifaMappedDataCA->GetEntriesFast();
 
     // Overflow (R3BROOT-speech "Errors") handling:
     // If an error bit indicates that the data is invalid,
@@ -206,13 +221,13 @@ void R3BCalifaMapped2CrystalCal::Exec(Option_t* option)
     const uint32_t QPID_errorS = 0x1980 | ANY_errorS;
     const uint32_t EN_errorS = 0x0020 | ANY_errorS;
 
-    for (Int_t i = 0; i < nHits; i++)
+    for (size_t i = 0; i < nHits; i++)
     {
-        mappedData[i] = dynamic_cast<R3BCalifaMappedData*>(fCalifaMappedDataCA->At(i));
-        auto crystalId = mappedData[i]->GetCrystalId();
-        auto wrts = mappedData[i]->GetWrts();
-        auto ov = mappedData[i]->GetOverFlow();
-        auto Tot = mappedData[i]->GetTot();
+        auto mappedData = dynamic_cast<R3BCalifaMappedData*>(fCalifaMappedDataCA->At(i));
+        auto crystalId = mappedData->GetCrystalId();
+        auto wrts = mappedData->GetWrts();
+        auto ov = mappedData->GetOverFlow();
+        auto Tot = mappedData->GetTot();
 
         auto validate_smear = [](uint16_t err_cond, double raw)
         { return err_cond ? NAN : raw + gRandom->Rndm() - 0.5; };
@@ -223,9 +238,9 @@ void R3BCalifaMapped2CrystalCal::Exec(Option_t* option)
             Ns = 2
         };
         double raw[3];
-        raw[en] = validate_smear(ov & EN_errorS, mappedData[i]->GetEnergy());
-        raw[Nf] = validate_smear(ov & QPID_errorS, mappedData[i]->GetNf());
-        raw[Ns] = validate_smear(ov & QPID_errorS, mappedData[i]->GetNs());
+        raw[en] = validate_smear(ov & EN_errorS, mappedData->GetEnergy());
+        raw[Nf] = validate_smear(ov & QPID_errorS, mappedData->GetNf());
+        raw[Ns] = validate_smear(ov & QPID_errorS, mappedData->GetNs());
         double cal[3] = { 0, 0, 0 };
 
         if (0 < crystalId && crystalId <= fNumCrystals)
@@ -242,15 +257,13 @@ void R3BCalifaMapped2CrystalCal::Exec(Option_t* option)
         double TotCal = Tot;
         if (fCalTotParams)
         {
-            double a0 = fCalTotParams->GetAt(fNumTotParams * (crystalId - 1));
-            double a1 = fCalTotParams->GetAt(fNumTotParams * (crystalId - 1) + 1);
-            TotCal = a0 * TMath::Exp(Tot / a1);
+            double a0 = params_tot.at(fNumTotParams * (crystalId - 1));
+            double a1 = params_tot.at(fNumTotParams * (crystalId - 1) + 1);
+            // TotCal = a0 * TMath::Exp(Tot / a1);
+            TotCal = (Tot == 0) ? 0 : a0 * TMath::Exp(Tot / a1);
         }
         AddCalData(crystalId, cal[en], cal[Nf], cal[Ns], wrts, TotCal);
     }
-
-    if (mappedData)
-        delete[] mappedData;
     return;
 }
 
@@ -274,4 +287,4 @@ R3BCalifaCrystalCalData* R3BCalifaMapped2CrystalCal::AddCalData(Int_t id,
     return new (clref[size]) R3BCalifaCrystalCalData(id, energy, Nf, Ns, wrts, tot_energy);
 }
 
-ClassImp(R3BCalifaMapped2CrystalCal);
+ClassImp(R3BCalifaMapped2CrystalCal)

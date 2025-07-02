@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -50,24 +50,24 @@ R3BIncomingIDOnlineSpectra::R3BIncomingIDOnlineSpectra(const TString& name, Int_
     , fHitLos(NULL)
     , fMwpc0HitDataCA(NULL)
     , fMwpc1HitDataCA(NULL)
-    , header(nullptr)
+    , fHeader(nullptr)
     , fNEvents(0)
     , fTpat(-1)
     , fStaId(1)
-    , fMin_Z(0.)
-    , fMax_Z(20.)
-    , fMin_Aq(1.6)
-    , fMax_Aq(3.9)
+    , fMin_Z(0.5)
+    , fMax_Z(21.)
+    , fMin_Aq(2.0)
+    , fMax_Aq(3.)
     , fMin_Brho(6)
-    , fMax_Brho(10)
+    , fMax_Brho(13)
     , fMin_RawTof(-50000)
     , fMax_RawTof(50000)
     , fMin_Beta(0.)
     , fMax_Beta(1.)
-    , fMin_Z_gate(0.)
-    , fMax_Z_gate(20.)
-    , fMin_Aq_gate(1.6)
-    , fMax_Aq_gate(3.9)
+    , fMin_Z_gate(0.5)
+    , fMax_Z_gate(21.)
+    , fMin_Aq_gate(2.0)
+    , fMax_Aq_gate(3.0)
 {
 }
 
@@ -108,8 +108,8 @@ InitStatus R3BIncomingIDOnlineSpectra::Init()
     FairRunOnline* run = FairRunOnline::Instance();
     run->GetHttpServer()->Register("", this);
 
-    header = dynamic_cast<R3BEventHeader*>(mgr->GetObject("EventHeader."));
-    R3BLOG_IF(error, !header, "Branch EventHeader. not found");
+    fHeader = dynamic_cast<R3BEventHeader*>(mgr->GetObject("EventHeader."));
+    R3BLOG_IF(error, !fHeader, "Branch EventHeader. not found");
 
     // get access to mapped data of FRS
     fHitFrs = dynamic_cast<TClonesArray*>(mgr->GetObject("FrsData"));
@@ -119,7 +119,7 @@ InitStatus R3BIncomingIDOnlineSpectra::Init()
     fMwpc0HitDataCA = dynamic_cast<TClonesArray*>(mgr->GetObject("Mwpc0HitData"));
     R3BLOG_IF(fatal, !fMwpc0HitDataCA, "Branch fMwpc0HitDataCA not found");
     fMwpc1HitDataCA = dynamic_cast<TClonesArray*>(mgr->GetObject("Mwpc1HitData"));
-    R3BLOG_IF(fatal, !fMwpc1HitDataCA, "Branch fMwpc1HitDataCA not found");
+    R3BLOG_IF(warn, !fMwpc1HitDataCA, "Branch fMwpc1HitDataCA not found");
 
     // Create histograms for detectors
     TString Name1;
@@ -295,13 +295,13 @@ InitStatus R3BIncomingIDOnlineSpectra::Init()
     fh2_IsoGated_xc_anglec->GetXaxis()->SetTitleSize(0.045);
     fh2_IsoGated_xc_anglec->GetYaxis()->SetLabelSize(0.045);
     fh2_IsoGated_xc_anglec->GetYaxis()->SetTitleSize(0.045);
-    fh2_IsoGated_xc_anglec->Draw("colz");
+    //    fh2_IsoGated_xc_anglec->Draw("colz");
 
     cLosE_Tof = new TCanvas("LosE_Tof", "DeltaE in LOS and Tof", 10, 10, 800, 700);
 
     Name1 = "LOS-E_vs_ToF";
     Name2 = "LOS Energy vs Raw ToF (S2-LOS);Raw ToF (S2-LOS) / ns;LOS Z";
-    fh2_LosE_Tof = new TH2F(Name1, Name2, 3000, 0, 3000, 900, 0, 30);
+    fh2_LosE_Tof = new TH2F(Name1, Name2, 10000, 1300, 1500, 900, 0, 30);
     fh2_LosE_Tof->GetYaxis()->SetTitleOffset(1.1);
     fh2_LosE_Tof->GetXaxis()->CenterTitle(true);
     fh2_LosE_Tof->GetYaxis()->CenterTitle(true);
@@ -313,6 +313,19 @@ InitStatus R3BIncomingIDOnlineSpectra::Init()
 
     cLosE_Tof2 = new TCanvas(
         "LosE_with_ToF_measurement", "LOS Energy distribution with (black) and without (red) S2", 10, 10, 800, 700);
+
+    Name1 = "LOS-Z_with_S2";
+    Name2 = "LOS Energy with (black) without (red) good S2 hit;LOS Z;Counts";
+    fh1_LosE_withTof = new TH1F(Name1, Name2, 900, 0, 30);
+    fh1_LosE_withTof->GetYaxis()->SetTitleOffset(1.1);
+    fh1_LosE_withTof->GetXaxis()->CenterTitle(true);
+    fh1_LosE_withTof->GetYaxis()->CenterTitle(true);
+    fh1_LosE_withTof->GetXaxis()->SetLabelSize(0.045);
+    fh1_LosE_withTof->GetXaxis()->SetTitleSize(0.045);
+    fh1_LosE_withTof->GetYaxis()->SetLabelSize(0.045);
+    fh1_LosE_withTof->GetYaxis()->SetTitleSize(0.045);
+    fh1_LosE_withTof->SetLineColor(kBlack);
+    fh1_LosE_withTof->Draw("");
 
     Name1 = "LOS-Z_without_S2";
     Name2 = "LOS Energy with (black) without (red) good S2 hit;LOS Z;Counts";
@@ -326,19 +339,7 @@ InitStatus R3BIncomingIDOnlineSpectra::Init()
     fh1_LosE_withoutTof->GetYaxis()->SetTitleSize(0.045);
     fh1_LosE_withoutTof->SetLineColor(kRed);
     fh1_LosE_withoutTof->SetLineWidth(2);
-    fh1_LosE_withoutTof->Draw("");
-
-    Name1 = "LOS-Z_with_S2";
-    Name2 = "LOS Energy with (black) without (red) good S2 hit;LOS Z;Counts";
-    fh1_LosE_withTof = new TH1F(Name1, Name2, 900, 0, 30);
-    fh1_LosE_withTof->GetYaxis()->SetTitleOffset(1.1);
-    fh1_LosE_withTof->GetXaxis()->CenterTitle(true);
-    fh1_LosE_withTof->GetYaxis()->CenterTitle(true);
-    fh1_LosE_withTof->GetXaxis()->SetLabelSize(0.045);
-    fh1_LosE_withTof->GetXaxis()->SetTitleSize(0.045);
-    fh1_LosE_withTof->GetYaxis()->SetLabelSize(0.045);
-    fh1_LosE_withTof->GetYaxis()->SetTitleSize(0.045);
-    fh1_LosE_withTof->Draw("same");
+    fh1_LosE_withoutTof->Draw("same");
 
     // MAIN FOLDER-INCOMINGID
     TFolder* mainfol = new TFolder("FRS-IncomingID", "FRS incomingID info");
@@ -379,20 +380,20 @@ void R3BIncomingIDOnlineSpectra::Reset_Histo()
 
 void R3BIncomingIDOnlineSpectra::Exec(Option_t* option)
 {
-    if ((fTpat >= 0) && (header) && ((header->GetTpat() & fTpat) != fTpat))
+    if ((fTpat >= 0) && (fHeader) && ((fHeader->GetTpat() & fTpat) != fTpat))
         return;
 
     // Fill Hit data
     if (fHitFrs && fHitFrs->GetEntriesFast() > 0)
     {
-        Int_t nHits = fHitFrs->GetEntriesFast();
-        for (Int_t ihit = 0; ihit < nHits; ihit++)
+        auto nHits = fHitFrs->GetEntriesFast();
+        for (size_t ihit = 0; ihit < nHits; ihit++)
         {
-            R3BFrsData* hit = dynamic_cast<R3BFrsData*>(fHitFrs->At(ihit));
+            auto hit = dynamic_cast<R3BFrsData*>(fHitFrs->At(ihit));
             if (!hit)
                 continue;
-            if (hit->GetStaId() != fStaId)
-                continue;
+            // if (hit->GetStaId() != fStaId)
+            //    continue;
             fh2_Pos2vsAoQ_m1->Fill(hit->GetXS2(), hit->GetAq());
             fh1_tof->Fill(hit->GetTof());
             fh1_beta->Fill(hit->GetBeta());
@@ -400,41 +401,65 @@ void R3BIncomingIDOnlineSpectra::Exec(Option_t* option)
             fh2_Aqvsq->Fill(hit->GetAq(), hit->GetZ());
             fh2_Xs2vsbeta->Fill(hit->GetXS2(), hit->GetBeta());
 
-            auto nHits_Mw0 = fMwpc0HitDataCA->GetEntriesFast();
-            auto nHits_Mw1 = fMwpc1HitDataCA->GetEntriesFast();
-            for (Int_t iMw0 = 0; iMw0 < nHits_Mw0; iMw0++)
+            if (fHeader->GetExpId() == 249)
             {
-                auto hit_mw0 = dynamic_cast<R3BMwpcHitData*>(fMwpc0HitDataCA->At(iMw0));
-                if (!hit_mw0)
-                    continue;
-                auto mwpc0x = hit_mw0->GetX() + fMw0GeoPar->GetPosX() * 10.; // mm
-                for (Int_t iMw1 = 0; iMw1 < nHits_Mw1; iMw1++)
-                {
-                    auto hit_mw1 = dynamic_cast<R3BMwpcHitData*>(fMwpc1HitDataCA->At(iMw1));
-                    if (!hit_mw1)
-                        continue;
-                    auto mwpc1x = hit_mw1->GetX() + fMw1GeoPar->GetPosX() * 10.; // mm
-                    auto XCave = mwpc0x;
-                    auto AngleCave =
-                        (mwpc0x - mwpc1x) / (fMw0GeoPar->GetPosZ() - fMw1GeoPar->GetPosZ()) / 10. * 1000.; // mrad
+                auto nHits_Mw0 = fMwpc0HitDataCA->GetEntriesFast();
 
-                    fh2_Z_xc->Fill(XCave, hit->GetZ());
-                    // Plot PID gated histograms below
+                for (Int_t iMw0 = 0; iMw0 < nHits_Mw0; iMw0++)
+                {
+                    auto hit_mw0 = dynamic_cast<R3BMwpcHitData*>(fMwpc0HitDataCA->At(iMw0));
+                    if (!hit_mw0)
+                        continue;
+                    auto mwpc0x = hit_mw0->GetX() + fMw0GeoPar->GetPosX() * 10.; // mm
+
+                    fh2_Z_xc->Fill(mwpc0x, hit->GetZ());
                     if (hit->GetAq() < fMin_Aq_gate || hit->GetAq() > fMax_Aq_gate || hit->GetZ() < fMin_Z_gate ||
                         hit->GetZ() > fMax_Z_gate)
                         continue;
-                    fh2_IsoGated_Z_xc->Fill(XCave, hit->GetZ());
-                    fh2_IsoGated_xs2_xc->Fill(hit->GetXS2(), XCave);
-                    fh2_IsoGated_xc_anglec->Fill(XCave, AngleCave);
+                    fh2_IsoGated_Z_xc->Fill(mwpc0x, hit->GetZ());
+                    fh2_IsoGated_xs2_xc->Fill(hit->GetXS2(), mwpc0x);
                 }
             }
+
+            if (fHeader->GetExpId() == 91 || fHeader->GetExpId() == 118)
+            {
+                auto nHits_Mw0 = fMwpc0HitDataCA->GetEntriesFast();
+                auto nHits_Mw1 = fMwpc1HitDataCA->GetEntriesFast();
+                for (Int_t iMw0 = 0; iMw0 < nHits_Mw0; iMw0++)
+                {
+                    auto hit_mw0 = dynamic_cast<R3BMwpcHitData*>(fMwpc0HitDataCA->At(iMw0));
+                    if (!hit_mw0)
+                        continue;
+                    auto mwpc0x = hit_mw0->GetX() + fMw0GeoPar->GetPosX() * 10.; // mm
+                    for (Int_t iMw1 = 0; iMw1 < nHits_Mw1; iMw1++)
+                    {
+                        auto hit_mw1 = dynamic_cast<R3BMwpcHitData*>(fMwpc1HitDataCA->At(iMw1));
+                        if (!hit_mw1)
+                            continue;
+                        auto mwpc1x = hit_mw1->GetX() + fMw1GeoPar->GetPosX() * 10.; // mm
+                        auto XCave = mwpc0x;
+                        auto AngleCave =
+                            (mwpc0x - mwpc1x) / (fMw0GeoPar->GetPosZ() - fMw1GeoPar->GetPosZ()) / 10. * 1000.; // mrad
+
+                        fh2_Z_xc->Fill(XCave, hit->GetZ());
+                        // Plot PID gated histograms below
+                        if (hit->GetAq() < fMin_Aq_gate || hit->GetAq() > fMax_Aq_gate || hit->GetZ() < fMin_Z_gate ||
+                            hit->GetZ() > fMax_Z_gate)
+                            continue;
+                        fh2_IsoGated_Z_xc->Fill(XCave, hit->GetZ());
+                        fh2_IsoGated_xs2_xc->Fill(hit->GetXS2(), XCave);
+                        fh2_IsoGated_xc_anglec->Fill(XCave, AngleCave);
+                    }
+                }
+            }
+
             // making los pid
             if (fHitLos && fHitLos->GetEntriesFast() > 0)
             {
                 Int_t nHitsLos = fHitLos->GetEntriesFast();
                 for (Int_t ihitLos = 0; ihitLos < nHitsLos; ihitLos++)
                 {
-                    R3BLosHitData* hitLos = dynamic_cast<R3BLosHitData*>(fHitLos->At(ihitLos));
+                    auto hitLos = dynamic_cast<R3BLosHitData*>(fHitLos->At(ihitLos));
                     if (!hitLos)
                         continue;
                     fh2_LosE_Tof->Fill(hit->GetTof(), hitLos->GetZ());

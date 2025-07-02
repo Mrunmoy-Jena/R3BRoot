@@ -2,7 +2,7 @@
 
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -20,6 +20,7 @@
 #pragma link off all functions;
 
 #pragma link C++ class R3BUcesbSource+;
+#pragma link C++ class R3B::UcesbSource+;
 #pragma link C++ class R3BReader+;
 #pragma link C++ class R3BUnpackReader+;
 #pragma link C++ class R3BWhiterabbitNeulandReader+;
@@ -73,6 +74,7 @@
 #pragma link C++ class R3BFootReader+;
 #pragma link C++ class R3BFootSiReader+;
 #pragma link C++ class R3BAlpideReader+;
+#pragma link C++ class R3BHmpReader+;
 #pragma link C++ class R3BCalifaJulichReader+;
 #pragma link C++ class R3BRpcReader+;
 #pragma link C++ class R3BTwimReader+;
@@ -81,6 +83,7 @@
 #pragma link C++ class R3BMwpcReader+;
 #pragma link C++ class R3BSyncCheckReader+;
 #pragma link C++ class R3BMosaicReader+;
+#pragma link C++ class R3BActafReader+;
 
 
 #pragma link C++ class EXT_STR_h101_unpack_t;
@@ -146,5 +149,7 @@
 #pragma link C++ class EXT_STR_h101_RPC_t;
 #pragma link C++ class EXT_STR_h101_SYNC_CHECK_t;
 #pragma link C++ class EXT_STR_h101_MOSAIC_onion_t;
+#pragma link C++ class EXT_STR_h101_HMP_onion_t;
+#pragma link C++ class EXT_STR_h101_ACTAF_onion_t;
 
 #endif

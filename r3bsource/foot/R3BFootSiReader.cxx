@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -20,6 +20,8 @@
 
 #include "TClonesArray.h"
 #include "ext_data_struct_info.hh"
+
+#include <numeric>
 
 /**
  ** ext_h101_foot.h was created by running
@@ -42,7 +44,10 @@ R3BFootSiReader::R3BFootSiReader(EXT_STR_h101_FOOT_onion* data, size_t offset)
     //, fNbDet(sizeof(EXT_STR_h101_FOOT_onion) / sizeof(EXT_STR_h101_FOOT_onion.FOOT[0])) // Auto-gets # FEET from
     // struct!
     , fArray(new TClonesArray("R3BFootMappedData"))
+    , fMappedDetId(16)
 {
+    // Trivial mapping 1 - 1 by default
+    std::iota(fMappedDetId.begin(), fMappedDetId.end(), 1);
 }
 
 R3BFootSiReader::~R3BFootSiReader() { delete fArray; }
@@ -71,14 +76,29 @@ Bool_t R3BFootSiReader::Init(ext_data_struct_info* a_struct_info)
 Bool_t R3BFootSiReader::R3BRead()
 {
     R3BLOG(debug1, "Event data");
+
+    uint16_t kDet = 0;
     // Read FOOT detectors
     for (Int_t d = 0; d < fNbDet; d++)
     {
+
+        // Remap of the det number to order them from 1 to 8
+
+        for (int i = 0; i < fMappedDetId.size(); i++)
+        {
+
+            if (d + 1 == fMappedDetId[i])
+            {
+                kDet = i;
+            }
+        }
+
         if (fData->FOOT[d]._ == 640)
         {
             for (Int_t strip = 0; strip < fData->FOOT[d]._; ++strip)
             {
-                new ((*fArray)[fArray->GetEntriesFast()]) R3BFootMappedData(d + 1, strip + 1, fData->FOOT[d].E[strip]);
+                new ((*fArray)[fArray->GetEntriesFast()])
+                    R3BFootMappedData(kDet + 1, strip + 1, fData->FOOT[d].E[strip]);
             }
         }
         else if (fData->FOOT[d]._ == 0)
@@ -100,4 +120,4 @@ void R3BFootSiReader::Reset()
     fArray->Clear();
 }
 
-ClassImp(R3BFootSiReader);
+ClassImp(R3BFootSiReader)

@@ -61,7 +61,23 @@ on:
 # parallelly. As has been specified above, all the jobs below will be
 # triggered either by a pull request or a merge of a pull request.
 jobs:
+  # The job to clean the old caches before new caches are created when the PR is merged.
+  cache-cleanup:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+          submodules: 'true'
+      - name: clean-cache
+        if: github.event_name == 'push'
+        uses: './.github/actions/cache-clean'
+        with:
+          GH_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+
+  # The job to run the main CI pipelines
   build-test:
+    needs: cache-cleanup
     runs-on: ubuntu-latest
     # A strategy matrix gives different settings separately to different jobs
     # which are run parallelly.
@@ -76,6 +92,7 @@ jobs:
         # Here are the groups of repositories that need to be downloaded inside
         # r3broot. Each group is used by only one job.
         repos: [ r3broot, glad-tpc, sofia-frs-asy, r3broot-conan ]
+        os: [ debian10, debian11, debian12 ]
 
         # The list under "include" defines some properties for each group:
         #
@@ -133,7 +150,7 @@ jobs:
     # tool-kits for the building, such as clang-tidy and cvmfs. For more
     # information, please visit the Docker repository at Dockerhub.
     container: 
-      image: yanzhaowang/cvmfs_clang:latest
+      image: yanzhaowang/cvmfs_clang:${{ matrix.os }}
       volumes:
         - /tmp:/cvmfs
       env:
@@ -176,7 +193,6 @@ jobs:
         uses: './.github/actions/install-deps'
         with: 
           cache-name: ${{ matrix.cache }}
-          r3b-dev-key: ${{ env.cacheSHA }}
 
       # A self-defined composite action for the cmake configuration and build
       # of r3broot (along with necessary dep repos).

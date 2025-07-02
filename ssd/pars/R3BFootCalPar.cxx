@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -32,6 +32,7 @@ R3BFootCalPar::R3BFootCalPar(const char* name, const char* title, const char* co
 {
     detName = "FootCal";
     fStripCalParams = new TArrayF(fNumDets * fNumStrips * fNumParsFit);
+    fFineSigmas = new TArrayF(fNumDets * fNumStrips);
 }
 
 // ----  Destructor ------------------------------------------------------------
@@ -39,6 +40,7 @@ R3BFootCalPar::~R3BFootCalPar()
 {
     clear();
     delete fStripCalParams;
+    delete fFineSigmas;
 }
 
 // ----  Method clear ----------------------------------------------------------
@@ -61,12 +63,13 @@ void R3BFootCalPar::putParams(FairParamList* list)
     Int_t array_size = fNumDets * fNumStrips;
     LOG(info) << "Array Size: " << array_size;
 
-    fStripCalParams->Set(array_size);
+    fStripCalParams->Set(array_size * fNumParsFit);
 
     list->add("footDetNumberPar", fNumDets);
     list->add("footStripNumberPar", fNumStrips);
     list->add("footNumberParsFit", fNumParsFit);
     list->add("footStripCalPar", *fStripCalParams);
+    list->add("footFineSigmas", *fFineSigmas);
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -104,6 +107,15 @@ Bool_t R3BFootCalPar::getParams(FairParamList* list)
     if (!(list->fill("footStripCalPar", fStripCalParams)))
     {
         LOG(fatal) << "R3BFootCalPar::Could not initialize footStripCalPar";
+        return kFALSE;
+    }
+
+    fFineSigmas->Set(fNumDets * fNumStrips);
+
+    if (!(list->fill("footFineSigmas", fFineSigmas)))
+    {
+        LOG(warn)
+            << "R3BFootCalPar::Could not initialize footFineSigmas. This is ok if your experiment is older than g249.";
         return kFALSE;
     }
 

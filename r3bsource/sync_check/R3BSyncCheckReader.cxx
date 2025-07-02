@@ -1,6 +1,6 @@
 /******************************************************************************
  *   Copyright (C) 2019 GSI Helmholtzzentrum für Schwerionenforschung GmbH    *
- *   Copyright (C) 2019-2024 Members of R3B Collaboration                     *
+ *   Copyright (C) 2019-2025 Members of R3B Collaboration                     *
  *                                                                            *
  *             This software is distributed under the terms of the            *
  *                 GNU General Public Licence (GPL) version 3,                *
@@ -78,15 +78,16 @@ Bool_t R3BSyncCheckReader::R3BRead()
     foot_input.push_back(fData->SYNC_CHECK_FT11V);
     foot_input.push_back(fData->SYNC_CHECK_FT12V);
     foot_input.push_back(fData->SYNC_CHECK_FT13V);
-    foot_input.push_back(fData->SYNC_CHECK_FT14V);
-    foot_input.push_back(fData->SYNC_CHECK_FT15V);
-    foot_input.push_back(fData->SYNC_CHECK_FT16V);
+    // foot_input.push_back(fData->SYNC_CHECK_FT14V);
+    // foot_input.push_back(fData->SYNC_CHECK_FT15V);
+    // foot_input.push_back(fData->SYNC_CHECK_FT16V);
 
     new ((*fArray)[fArray->GetEntriesFast()]) R3BSyncCheckData(fData->SYNC_CHECK_MASTER,
                                                                fData->SYNC_CHECK_MASTERRR,
                                                                fData->SYNC_CHECK_MUSIC,
                                                                fData->SYNC_CHECK_RPC,
                                                                fData->SYNC_CHECK_STWO,
+                                                               fData->CALIFA_TRGENE,
                                                                foot_input);
     fNEvent++;
     foot_input.clear();
