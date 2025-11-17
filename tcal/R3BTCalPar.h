@@ -22,6 +22,7 @@
 #include "R3BTCalModulePar.h"
 #include <FairParGenericSet.h> // for FairParGenericSet
 #include <TObjArray.h>
+#include <iostream>
 #include <map>
 
 using namespace std;
@@ -52,7 +53,7 @@ class R3BTCalPar : public FairParGenericSet
                const char* context = "TestDefaultContext",
                Bool_t own = kTRUE);
     /**
-     * Destructor. Cleares the memory used by the object.
+     * Destructor. Clears the memory used by the object.
      */
     virtual ~R3BTCalPar(void);
 
@@ -125,7 +126,7 @@ class R3BTCalPar : public FairParGenericSet
     void AddModulePar(R3BTCalModulePar* tch);
 
     /**
-     * Method to retrieve the arrray with module containers.
+     * Method to retrieve the array with module containers.
      * @return an array with parameter containers of type R3BTCalModulePar.
      */
     TObjArray* GetListOfModulePar() { return fTCalParams; }
@@ -149,8 +150,8 @@ class R3BTCalPar : public FairParGenericSet
 
     TObjArray* fTCalParams; /**< an array with parameter containers of all modules */
 
-    Bool_t fMapInit;             /**< a boolean flag for indication whether the indexing map is initialized */
-    map<Int_t, Int_t> fIndexMap; /**< a map between index of a container in array and plane,paddle,side */
+    Bool_t fMapInit;                  /**< a boolean flag for indication whether the indexing map is initialized */
+    std::map<Int_t, Int_t> fIndexMap; /**< a map between index of a container in array and plane,paddle,side */
 
   public:
     ClassDef(R3BTCalPar, 1);

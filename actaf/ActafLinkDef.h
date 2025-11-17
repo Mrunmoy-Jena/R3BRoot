@@ -24,6 +24,12 @@
 #pragma link C++ class R3BActafContFact+;
 
 #pragma link C++ class R3BActafMappingPar+;
+#pragma link C++ class R3BActafCalPar+;
+
+#pragma link C++ class R3BActafGeometry+;
+
+#pragma link C++ class R3BActafMapped2Cal+;
+#pragma link C++ class R3BActafCal2Hit+;
 
 #endif
 

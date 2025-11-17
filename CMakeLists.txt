@@ -21,10 +21,10 @@ if(CMAKE_BINARY_DIR STREQUAL CMAKE_SOURCE_DIR)
 endif()
 
 # Check if cmake has the required version
-cmake_minimum_required(VERSION 3.15 FATAL_ERROR)
+cmake_minimum_required(VERSION 3.27 FATAL_ERROR)
 
 # set cmake policies
-cmake_policy(VERSION 3.15...3.31)
+cmake_policy(VERSION 3.27...4.1)
 
 # Set name of our project to "R3BROOT". Has to be done after check of cmake version
 project(R3BROOT LANGUAGES C CXX Fortran)
@@ -32,20 +32,13 @@ project(R3BROOT LANGUAGES C CXX Fortran)
 # use default gnu install convention:
 include(GNUInstallDirs)
 
-if(NOT EXISTS "${PROJECT_SOURCE_DIR}/macros")
-    message(STATUS "  ")
-    message(
-        ERROR
-        " macros repository is missing in the R3BRoot source directory\ncd ${CMAKE_SOURCE_DIR}\ngit clone -b dev https://github.com/R3BRootGroup/macros.git"
-    )
-    message(STATUS "  ")
-endif(NOT EXISTS "${PROJECT_SOURCE_DIR}/macros")
+option(BUILD_LAND_DIR "Build old land module" ON)
 
 # Check for needed environment variables
 if(NOT DEFINED ENV{SIMPATH})
     message(
         FATAL_ERROR
-            "You did not define the environment variable SIMPATH which is nedded to find the external packages. Please set this variable and execute cmake again."
+            "You did not define the environment variable SIMPATH which is needed to find the external packages. Please set this variable and execute cmake again."
     )
 endif(NOT DEFINED ENV{SIMPATH})
 
@@ -327,7 +320,7 @@ else()
     if(NOT APPLE)
         message(
             STATUS
-                "Set env WERROR to 1 to enable -Werror. If origin/dev compiles on your platform with that option, it is definitly a good idea to do that."
+                "Set env WERROR to 1 to enable -Werror. If origin/dev compiles on your platform with that option, it is definitely a good idea to do that."
         )
         set(CMAKE_CXX_FLAGS
             "${CMAKE_CXX_FLAGS} -Wall -Wformat-security -Wno-sign-compare -Wno-reorder -Wno-unused-variable -Wno-unused-but-set-variable"
@@ -560,33 +553,28 @@ if(NOT MODULE)
     add_subdirectory(tcal)
     if(WITH_UCESB)
         add_subdirectory(r3bsource)
+	add_subdirectory(pdc)
     endif()
     add_subdirectory(neuland)
     add_subdirectory(glad)
-    add_subdirectory(dch)
     add_subdirectory(fiber)
-    add_subdirectory(gfi)
-    add_subdirectory(land)
+    if(BUILD_LAND_DIR)
+        add_subdirectory(land)
+    endif()
     add_subdirectory(los)
     add_subdirectory(rolu)
     add_subdirectory(frssci)
     add_subdirectory(sci2)
     add_subdirectory(sci8)
-    add_subdirectory(sfib)
-    add_subdirectory(mtof)
     add_subdirectory(tofi)
     add_subdirectory(tofd)
     add_subdirectory(ssd)
     add_subdirectory(tttx)
-    add_subdirectory(strawtubes)
     add_subdirectory(music)
     add_subdirectory(r3bgen)
     add_subdirectory(califa)
     add_subdirectory(evtvis)
     add_subdirectory(psp)
-    add_subdirectory(compilehelper)
-    add_subdirectory(tracker_rene)
-    add_subdirectory(pdc)
     add_subdirectory(rpc)
     add_subdirectory(alpide)
     add_subdirectory(mwpc)
@@ -687,6 +675,16 @@ endif()
 if(PROJECT_PACKAGE_DEPENDENCIES)
     message(STATUS "  ")
     message(STATUS "  ${Cyan}DEPENDENCY FOUND     VERSION                   PREFIX${CR}")
+    # Show CMake version
+    fair_pad("CMake" 21 " " dep_padded)
+    if(DISABLE_COLOR)
+       fair_pad("${CMAKE_VERSION}" 26 " " version_padded)
+    else()
+       set(version_str "${BGreen}${CMAKE_VERSION}${CR}")
+       fair_pad("${version_str}" 26 " " version_padded COLOR 1)
+    endif()
+    get_filename_component(cmake_prefix ${CMAKE_COMMAND} DIRECTORY)
+    message(STATUS "  ${dep_padded}${version_padded}${cmake_prefix}")
     foreach(dep IN LISTS PROJECT_PACKAGE_DEPENDENCIES)
         if(${dep}_VERSION)
             if(${dep} STREQUAL DDS)
@@ -771,12 +769,7 @@ if(PROJECT_PACKAGE_DEPENDENCIES)
         elseif(${dep} STREQUAL yaml-cpp)
             get_filename_component(prefix ${YAML_CPP_INCLUDE_DIR}/.. ABSOLUTE)
         endif()
-
         message(STATUS "  ${BWhite}${dep_padded}${CR}${version_padded}${prefix}")
-
-        #    if(${dep} STREQUAL Geant3)
-        #      message(STATUS "                                          G3SYS: ${Geant3_SYSTEM_DIR}")
-        #    endif()
         if(${dep} STREQUAL Geant4)
             foreach(dataset IN LISTS Geant4_DATASETS)
                 fair_pad(

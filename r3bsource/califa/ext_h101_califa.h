@@ -41,9 +41,6 @@ typedef int int32_t;
 typedef struct EXT_STR_h101_CALIFA_t
 {
     /* RAW */
-    uint32_t CALIFA_TRGENE /* [0,4] */;
-    uint32_t CALIFA_TRGENEI[4 EXT_STRUCT_CTRL(CALIFA_TRGENE)] /* [1,4] */;
-    uint32_t CALIFA_TRGENEv[4 EXT_STRUCT_CTRL(CALIFA_TRGENE)] /* [0,65535] */;
     uint32_t CALIFA_ENE /* [0,5088] */;
     uint32_t CALIFA_ENEI[5088 EXT_STRUCT_CTRL(CALIFA_ENE)] /* [1,5088] */;
     uint32_t CALIFA_ENEv[5088 EXT_STRUCT_CTRL(CALIFA_ENE)] /* [0,65535] */;
@@ -98,9 +95,6 @@ typedef struct EXT_STR_h101_CALIFA_t
 typedef struct EXT_STR_h101_CALIFA_onion_t
 {
     /* RAW */
-    uint32_t CALIFA_TRGENE;
-    uint32_t CALIFA_TRGENEI[4 /* CALIFA_TRGENE */];
-    uint32_t CALIFA_TRGENEv[4 /* CALIFA_TRGENE */];
     uint32_t CALIFA_ENE;
     uint32_t CALIFA_ENEI[5088 /* CALIFA_ENE */];
     uint32_t CALIFA_ENEv[5088 /* CALIFA_ENE */];
@@ -147,28 +141,6 @@ typedef struct EXT_STR_h101_CALIFA_onion_t
     {                                                                                                                  \
         ok = 1;                                                                                                        \
         /* RAW */                                                                                                      \
-        EXT_STR_ITEM_INFO2_LIM(                                                                                        \
-            ok, si, offset, struct_t, printerr, CALIFA_TRGENE, UINT32, "CALIFA_TRGENE", 4, 0 /*flags*/);               \
-        EXT_STR_ITEM_INFO2_ZZP(ok,                                                                                     \
-                               si,                                                                                     \
-                               offset,                                                                                 \
-                               struct_t,                                                                               \
-                               printerr,                                                                               \
-                               CALIFA_TRGENEI,                                                                         \
-                               UINT32,                                                                                 \
-                               "CALIFA_TRGENEI",                                                                       \
-                               "CALIFA_TRGENE",                                                                        \
-                               0 /*flags*/);                                                                           \
-        EXT_STR_ITEM_INFO2_ZZP(ok,                                                                                     \
-                               si,                                                                                     \
-                               offset,                                                                                 \
-                               struct_t,                                                                               \
-                               printerr,                                                                               \
-                               CALIFA_TRGENEv,                                                                         \
-                               UINT32,                                                                                 \
-                               "CALIFA_TRGENEv",                                                                       \
-                               "CALIFA_TRGENE",                                                                        \
-                               0 /*flags*/);                                                                           \
         EXT_STR_ITEM_INFO2_LIM(                                                                                        \
             ok, si, offset, struct_t, printerr, CALIFA_ENE, UINT32, "CALIFA_ENE", 5088, 0 /*flags*/);                  \
         EXT_STR_ITEM_INFO2_ZZP(                                                                                        \

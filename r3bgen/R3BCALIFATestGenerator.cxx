@@ -36,16 +36,12 @@ R3BCALIFATestGenerator::R3BCALIFATestGenerator(Int_t pdgid, Int_t mult)
     , fPDGMass(0)
     , fPtMin(0)
     , fPtMax(0)
-    , fPhiMin(0)
-    , fPhiMax(0)
     , fEtaMin(0)
     , fEtaMax(0)
     , fYMin(0)
     , fYMax(0)
     , fPMin(0)
     , fPMax(0)
-    , fThetaMin(0)
-    , fThetaMax(0)
     , fX(0)
     , fY(0)
     , fZ(0)
@@ -55,23 +51,7 @@ R3BCALIFATestGenerator::R3BCALIFATestGenerator(Int_t pdgid, Int_t mult)
     , fX2(0)
     , fY2(0)
     , fZ2(0)
-    , fEtaRangeIsSet(0)
-    , fYRangeIsSet(0)
-    , fThetaRangeIsSet(0)
-    , fCosThetaIsSet(0)
-    , fPtRangeIsSet(0)
-    , fPRangeIsSet(0)
-    , fPointVtxIsSet(0)
-    , fBoxVtxIsSet(0)
-    , fDebug(0)
-    , fGammasDefinedInNuclearDecay(0)
-    , fBetaOfEmittingFragment(0)
-    , fGammaFactor(1)
-    , fLorentzBoostIsSet(0)
-    , fNuclearDecayChainIsSet(0)
 {
-    // Constructor. Set default kinematics limits
-    SetPhiRange();
 }
 
 Bool_t R3BCALIFATestGenerator::Init()
@@ -80,6 +60,7 @@ Bool_t R3BCALIFATestGenerator::Init()
     R3BLOG_IF(fatal, fPhiMax - fPhiMin > 360, "phi range is too wide: " << fPhiMin << "<phi<" << fPhiMax);
     R3BLOG_IF(fatal, fPRangeIsSet && fPtRangeIsSet, "Cannot set P and Pt ranges simultaneously");
     R3BLOG_IF(fatal, fPRangeIsSet && fYRangeIsSet, "Cannot set P and Y ranges simultaneously");
+
     if ((fThetaRangeIsSet && fYRangeIsSet) || (fThetaRangeIsSet && fEtaRangeIsSet) || (fYRangeIsSet && fEtaRangeIsSet))
     {
         R3BLOG(fatal, "Cannot set Y, Theta or Eta ranges simultaneously");
@@ -89,8 +70,8 @@ Bool_t R3BCALIFATestGenerator::Init()
     // CALIFA specifics
     R3BLOG_IF(fatal, fBetaOfEmittingFragment > 1, "beta of fragment larger than 1!");
 
-    Double32_t sumBranchingRatios = 0;
-    for (Int_t i = 0; i < fGammasDefinedInNuclearDecay; i++)
+    double sumBranchingRatios = 0;
+    for (Int_t i = 0; i < fGammaEnergies.size(); i++)
     {
         if (fGammaBranchingRatios[i] > 1)
         {
@@ -112,7 +93,7 @@ Bool_t R3BCALIFATestGenerator::ReadEvent(FairPrimaryGenerator* primGen)
 {
     // Generate one event: produce primary particles emitted from one vertex.
     // Primary particles are distributed uniformly along
-    // those kinematics variables which were limitted by setters.
+    // those kinematics variables which were limited by setters.
     // if SetCosTheta() function is used, the distribution will be uniform in
     // cos(theta)
 
@@ -174,7 +155,7 @@ Bool_t R3BCALIFATestGenerator::ReadEvent(FairPrimaryGenerator* primGen)
         {
             LOG_IF(fatal, fPDGType != 22) << "PDG code " << fPDGType << " is not a gamma!";
             br = gRandom->Uniform();
-            for (Int_t i = 0; i < fGammasDefinedInNuclearDecay; i++)
+            for (Int_t i = 0; i < fGammaEnergies.size(); i++)
             {
                 if (br < fGammaBranchingRatios[i])
                 {
@@ -192,7 +173,7 @@ Bool_t R3BCALIFATestGenerator::ReadEvent(FairPrimaryGenerator* primGen)
       if (fLorentzBoostIsSet && !doNotBoost){
 
         //Lorentz transformation Pz(lab) = gamma * Pz(cm) + gamma * beta * E
-        //As each Lorentz transformation can be performed sequencially,
+        //As each Lorentz transformation can be performed sequentially,
         //we can separate the gamma factor corresponding to each direction
         Double32_t gammaMomentum=TMath::Sqrt(px*px+py*py+pz*pz);
         pz = (pz + fBetaOfEmittingFragment * gammaMomentum) / fGammaFactor;
@@ -201,7 +182,7 @@ Bool_t R3BCALIFATestGenerator::ReadEvent(FairPrimaryGenerator* primGen)
         if (fPDGType == 22 && fLorentzBoostIsSet && !doNotBoost)
         { /// for gamma-rays
             // Lorentz transformation Pz(lab) = gamma * Pz(cm) + gamma * beta * E
-            // As each Lorentz transformation can be performed sequencially,
+            // As each Lorentz transformation can be performed sequentially,
             // we can separate the gamma factor corresponding to each direction
             Double32_t gammaMomentum = TMath::Sqrt(px * px + py * py + pz * pz);
             pz = (pz + fBetaOfEmittingFragment * gammaMomentum) / fGammaFactor;
@@ -209,7 +190,7 @@ Bool_t R3BCALIFATestGenerator::ReadEvent(FairPrimaryGenerator* primGen)
         else if (fLorentzBoostIsSet && !doNotBoost)
         { /// for any massive particle
             // Lorentz transformation Pz(lab) = gamma * Pz(cm) + gamma * beta * E
-            // As each Lorentz transformation can be performed sequencially,
+            // As each Lorentz transformation can be performed sequentially,
             // we can separate the gamma factor corresponding to each direction
             Double32_t particleEnergy = TMath::Sqrt(px * px + py * py + pz * pz + fPDGMass * fPDGMass);
             pz = (pz + fBetaOfEmittingFragment * particleEnergy) / fGammaFactor;
@@ -237,20 +218,10 @@ void R3BCALIFATestGenerator::SetFragmentVelocity(double beta, double dispersion)
     fGammaFactor = TMath::Sqrt(1 - fBetaOfEmittingFragment * fBetaOfEmittingFragment);
 }
 
-void R3BCALIFATestGenerator::SetDecayChainPoint(Double32_t gammaEnergy, Double32_t branchingRatio)
+void R3BCALIFATestGenerator::SetDecayChainPoint(double gammaEnergy, double branchingRatio)
 {
-    //
-    //
-    //
-    if (fGammasDefinedInNuclearDecay > 7)
-    {
-        R3BLOG(error, "Maximum number (8) of gammas defined in the chain\n");
-    }
-    else
-    {
-        fGammaEnergies[fGammasDefinedInNuclearDecay] = gammaEnergy;
-        fGammaBranchingRatios[fGammasDefinedInNuclearDecay] = branchingRatio;
-        fGammasDefinedInNuclearDecay++;
-    }
+    R3BLOG(info, "Set gamma energy " << gammaEnergy << " with a branching ratio of " << branchingRatio);
+    fGammaEnergies.push_back(gammaEnergy);
+    fGammaBranchingRatios.push_back(branchingRatio);
 }
 ClassImp(R3BCALIFATestGenerator)

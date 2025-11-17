@@ -18,13 +18,13 @@ jobs:
     runs-on: ubuntu-latest
 
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
       - name: Code formatting
         run: |
           cd $GITHUB_WORKSPACE
           sudo apt-get update
-          sudo apt-get install clang-format-15
-          ./util/clang-format-check.sh clang-format-15
+          sudo apt-get install clang-format-16
+          ./util/clang-format-check.sh clang-format-16
         shell: bash
         
   clang-tidy:
@@ -33,6 +33,8 @@ jobs:
       matrix:
         preset: [ default ]
         os: [ debian12 ]
+        fsv: [ jan24p1 ]
+        cpp: [ 17 ]
     container: 
       image: yanzhaowang/cvmfs_clang:${{ matrix.os }}
       volumes:
@@ -41,7 +43,7 @@ jobs:
         CVMDIR: /cvmfs/fairsoft.gsi.de
       options: --user root --privileged  --ulimit nofile=9999:10000 --cap-add SYS_ADMIN --device /dev/fuse
     steps:
-    - uses: actions/checkout@v4
+    - uses: actions/checkout@v5
       with:
         fetch-depth: 0
 

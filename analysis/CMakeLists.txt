@@ -35,7 +35,6 @@ add_library_with_dictionary(
     online
     pars
     DEPENDENCIES
-    R3BTraRene
     R3BLos
     R3BCalifa
     R3BMwpc
@@ -44,4 +43,7 @@ add_library_with_dictionary(
     R3BTofi
     R3BTwim
     R3BMusic
-    R3BBunchedFiber)
+    R3BBunchedFiber
+    R3BFrsSci)
+    
+add_subdirectory(test)

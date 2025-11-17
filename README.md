@@ -5,11 +5,13 @@
 [![CI-CD](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main.yml)
 [![Static Analysis](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/static_analysis.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/static_analysis.yml)
 [![Validate Codemeta](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/codemeta_validate.yaml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/codemeta_validate.yaml)
+[![CI-CD-nightly](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main-nightly.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main-nightly.yml)
+[![CI-CD-nightly-sim](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main-nightly-sim.yml/badge.svg)](https://github.com/R3BRootGroup/R3BRoot/actions/workflows/main-nightly-sim.yml)
 [![dashboard](https://img.shields.io/badge/dashboard-r3broot-blue?labelColor=gray&style=flat)](https://cdash.gsi.de/index.php?project=R3BRoot)
 
 ## The R3BRoot Framework
 
-The R3BRoot software is based on the [FairRoot](https://github.com/FairRootGroup/FairRoot) framework and can be used to perform Monte Carlo simulations and experimental data analysis of the R3B (Reactions with Relativistic Radioactive Beams) nuclear physics experiments at the GSI-FAIR research center (Facility for Antiproton and Ion Research). The user can create simulated data and/or perform analysis with the same framework. Geant3 and [Geant4](https://geant4.web.cern.ch/) transport engines are supported, however, the implemented tasks that create simulated data do not depend on a particular Monte Carlo engine. The framework delivers base classes which enable the users to construct their detectors and/or analysis tasks in a simple way, it also delivers some general functionality like track visualization. Moreover, an interface for reading experimental and/or simulated magnetic field maps is also implemented. R3BRoot software is a source distribution with recurring releases for macOS and Linux.
+The R3BRoot software is based on the [FairRoot](https://github.com/FairRootGroup/FairRoot) framework and can be used to perform Monte Carlo simulations and experimental data analysis of the [R3B (Reactions with Relativistic Radioactive Beams)](https://www.gsi.de/work/forschung/nustarenna/nustarenna_divisions/kernreaktionen/activities/r3b) nuclear physics experiments at the GSI-FAIR research center (Facility for Antiproton and Ion Research). The user can create simulated data and/or perform analysis with the same framework. [Geant3](https://cds.cern.ch/record/1119728?ln=es) and [Geant4](https://geant4.web.cern.ch/) transport engines are supported, however, the implemented tasks that create simulated data do not depend on a particular Monte Carlo engine. The framework delivers base classes which enable the users to construct their detectors and/or analysis tasks in a simple way, it also delivers some general functionality like track visualization. Moreover, an interface for reading experimental and/or simulated magnetic field maps is also implemented. R3BRoot software is a source distribution with recurring releases for macOS and Linux.
 
 ## Discussion Forum
 
@@ -56,10 +58,12 @@ First, you will need to install FairSoft and FairRoot. For more details:
 export SIMPATH=%PATH_TO_FAIRSOFT%
 export FAIRROOTPATH=%PATH_TO_FAIRROOT%
 # from %R3BRoot_DIRECTORY%
-mkdir build
-cmake -S . -B ./build
-cmake --build ./build -- -j${number_of_threads}
-source build/config.sh
+./build_thisr3broot.sh
+# or a second option is the following
+mkdir ../build
+cmake -S . -B ../build
+cmake --build ../build -j${number_of_threads}
+source ../build/config.sh
 ~~~
 
 For the building with Conan package manager, see [this instruction](doc/conan_usage.md).
@@ -82,10 +86,42 @@ Please ask your questions, request features, and report issues by [creating a gi
 
 ## Code Formatting
 
-The R3BRoot project uses clang-format-15 to ensure a common code formatting. The script "clang-format-all.sh" can be used for this purpose: 
+The R3BRoot project uses clang-format-16 to ensure a common code formatting. The script "clang-format-all.sh" can be used for this purpose: 
 ~~~bash
-source util/clang-format-all.sh
+bash util/clang-format-all.sh
 ~~~
+
+## Spell Checking
+
+To avoid common typos in the codebase and documentation, we use [codespell](https://github.com/codespell-project/codespell).
+
+Check for spelling mistakes using the ignore list defined in `.codespell-ignorewords`:
+
+~~~bash
+codespell -I .codespell-ignorewords
+~~~
+
+If you want to automatically fix the detected typos:
+
+~~~bash
+codespell -w -I .codespell-ignorewords
+~~~
+
+## Tested systems
+
+The following systems are tested regularly.
+
+| **OS Name** | **Arch** | **OS Version** | **Compiler**  | **CMake**       | **C++ Version** |
+| ----------- | -------- | -------------- | ------------- | --------------- | --------------- |
+| Almalinux   | x86\_64  | 9.3            | GCC 11.4.1    | 3.27.9 / 4.0.3  | C++17 / C++20 / C++23 |
+| Almalinux   | x86\_64  | 9.4            | GCC 14.2.0    | 3.30.6          | C++17           |
+| RHEL        | x86\_64  | 9.6            | GCC 14.2.0    | 3.30.6          | C++17           |
+| Debian      | x86\_64  | 10             | GCC 8.3.0     | 3.27.4 / 4.0.3  | C++17           |
+| Debian      | x86\_64  | 11             | GCC 10.2.1    | 3.27.4 / 3.30.0 | C++17           |
+| Debian      | x86\_64  | 12             | GCC 12.2.0    | 3.27.4 / 3.30.0 | C++17 / C++20   |
+| Ubuntu      | x86\_64  | 24.04          | GCC 13.3.0    | 3.28.3 / 4.0.3  | C++17 / C++20   |
+| Ubuntu      | x86\_64  | 25.04          | GCC 14.2.0    | 3.31.6          | C++17           |
+| macOS       | arm64    | 15.3           | AppleClang 15 |  4.0.3          | C++17           |
 
 ## Security Policy
 

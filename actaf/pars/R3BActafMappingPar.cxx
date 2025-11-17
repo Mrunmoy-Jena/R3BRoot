@@ -17,7 +17,9 @@
 // --------------------------------------------------------------
 
 #include <FairParamList.h>
+#include <TArrayD.h>
 #include <TArrayI.h>
+#include <algorithm>
 
 #include "R3BActafMappingPar.h"
 #include "R3BLogger.h"
@@ -30,6 +32,7 @@ R3BActafMappingPar::R3BActafMappingPar(const char* name, const char* title, cons
     fModule.resize(fNbPads);
     fChannel.resize(fNbPads);
     fPad.resize(fNbPads);
+
     for (Int_t idx = 0; idx < fNbPads; idx++)
     {
         fIn_use[idx] = 1;
@@ -76,28 +79,45 @@ void R3BActafMappingPar::putParams(FairParamList* list)
     list->add("GeoVersionPar", fGeoVersion);
     R3BLOG(info, "Geometry version: " << fGeoVersion);
 
+    list->add("NbBinsSamplePar", fNbBinsSample);
+    R3BLOG(info, "Nb of bins of the sample: " << fNbBinsSample);
+
     list->add("NbPadsPar", fNbPads);
     R3BLOG(info, "Nb of pads: " << fNbPads);
 
     list->add("NbFADCModulesPar", fNbFADCModules);
     R3BLOG(info, "Nb of FADC-Modules: " << fNbFADCModules);
 
-    auto* In_use = new TArrayI(fNbPads);
-    auto* Module = new TArrayI(fNbPads);
-    auto* Channel = new TArrayI(fNbPads);
-    auto* Pads = new TArrayI(fNbPads);
-
+    TArrayI In_use(fNbPads);
+    TArrayI Module(fNbPads);
+    TArrayI Channel(fNbPads);
+    TArrayI Pads(fNbPads);
     for (Int_t idx = 0; idx < fNbPads; idx++)
     {
-        In_use->AddAt(fIn_use[idx], idx);
-        Module->AddAt(fModule[idx], idx);
-        Channel->AddAt(fChannel[idx], idx);
-        Pads->AddAt(fPad[idx], idx);
+        In_use[idx] = fIn_use[idx];
+        Module[idx] = fModule[idx];
+        Channel[idx] = fChannel[idx];
+        Pads[idx] = fPad[idx];
     }
-    list->add("InUsePar", *In_use);
-    list->add("ModulePar", *Module);
-    list->add("ChannelPar", *Channel);
-    list->add("PadPar", *Pads);
+
+    list->add("InUsePar", In_use);
+    list->add("ModulePar", Module);
+    list->add("ChannelPar", Channel);
+    list->add("PadPar", Pads);
+}
+
+// Template to simplify the parameter getting
+template <class TArrayT, class VecT>
+void FillAndCopy(FairParamList* list, const char* name, TArrayT& arr, VecT& vec)
+{
+    if (!list->fill(name, &arr))
+    {
+        R3BLOG(warn, "---Could not initialize " << name);
+        return;
+    }
+    const Int_t n = arr.GetSize();
+    vec.resize(n);
+    std::copy_n(arr.GetArray(), n, vec.begin());
 }
 
 // ----  Method getParams ------------------------------------------------------
@@ -130,6 +150,16 @@ Bool_t R3BActafMappingPar::getParams(FairParamList* list)
         R3BLOG(info, "Nb of pads: " << fNbPads);
     }
 
+    if (!list->fill("NbBinsSamplePar", &fNbBinsSample))
+    {
+        R3BLOG(error, "Could not initialize NbBinsSamplePar");
+        return kFALSE;
+    }
+    else
+    {
+        R3BLOG(info, "Nb of bins of the sample: " << fNbBinsSample);
+    }
+
     if (!list->fill("NbFADCModulesPar", &fNbFADCModules))
     {
         R3BLOG(error, "Could not initialize NbFADCModulesPar");
@@ -139,6 +169,18 @@ Bool_t R3BActafMappingPar::getParams(FairParamList* list)
     {
         R3BLOG(info, "Nb of FADC-Modules: " << fNbFADCModules);
     }
+
+    // Map names to arrays for cleaner loop
+    TArrayI In_use(fNbPads);
+    TArrayI Module(fNbPads);
+    TArrayI Channel(fNbPads);
+    TArrayI Pads(fNbPads);
+
+    // Ints
+    FillAndCopy(list, "InUsePar", In_use, fIn_use);
+    FillAndCopy(list, "ModulePar", Module, fModule);
+    FillAndCopy(list, "ChannelPar", Channel, fChannel);
+    FillAndCopy(list, "PadPar", Pads, fPad);
 
     return kTRUE;
 }
@@ -151,7 +193,9 @@ void R3BActafMappingPar::printParams()
 {
     R3BLOG(info, "GeoVersion: " << fGeoVersion);
     R3BLOG(info, "Nb of Pads: " << fNbPads);
+    R3BLOG(info, "Nb of Bins of the Sample: " << fNbBinsSample);
     R3BLOG(info, "Nb of FADC-Modules: " << fNbFADCModules);
+
     for (Int_t idx = 0; idx < fNbPads; idx++)
     {
         R3BLOG(info, "Pad: " << idx + 1 << ", module: " << fModule[idx] << ", channel: " << fChannel[idx]);

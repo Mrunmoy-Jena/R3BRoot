@@ -20,8 +20,9 @@ file(
     SRCS
     ./sim/*.cxx
     ./pars/*.cxx
+    ./geo/*.cxx
     ./online/*.cxx
-#    ./calibration/*.cxx
+    ./calibration/*.cxx
 #    ./ana/*.cxx
     )
 
@@ -40,6 +41,7 @@ add_library_with_dictionary(
     ${CMAKE_CURRENT_SOURCE_DIR}
     sim
     pars
+    geo
     online
     calibration
     ana
@@ -48,3 +50,7 @@ add_library_with_dictionary(
     R3BTracking
     R3BData)
 
+if(BUILD_GEOMETRY)
+#    add_subdirectory(geobase)
+endif()
+add_subdirectory(test)

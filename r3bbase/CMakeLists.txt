@@ -23,7 +23,6 @@ set(SRCS
     R3BException.cxx
     R3BFileSource.cxx
     R3BFileSource2.cxx
-    R3BLogger.cxx
     R3BModule.cxx
     R3BTcutPar.cxx
     R3BTsplinePar.cxx
@@ -49,7 +48,7 @@ set(HEADERS
     R3BTsplinePar.h
     R3BWhiterabbitPropagator.h)
 
-set(DEPENDENCIES FairRoot::Generators FairRoot::Online)
+set(DEPENDENCIES FairRoot::Generators FairRoot::Online ROOT::RHTTP)
 
 add_library_with_dictionary(
     LIBNAME

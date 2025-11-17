@@ -14,6 +14,7 @@
 // ------------------------------------------------------------
 // -----             R3BFootOnlineSpectra                 -----
 // -----    Created 16/07/21 by J.L. Rodriguez-Sanchez    -----
+// -----       Modified 05/2025 by Pablo Gonzalez Rusell  -----
 // -----          Fill FOOT online histograms             -----
 // ------------------------------------------------------------
 
@@ -34,11 +35,12 @@
 class TClonesArray;
 class R3BEventHeader;
 class R3BFootMappingPar;
+class R3BFootHitPar;
 class TH1F;
 class TH2F;
 
 /**
- * This taks reads FOOT data and plots online histograms
+ * This tasks reads FOOT data and plots online histograms
  */
 class R3BFootOnlineSpectra : public FairTask
 {
@@ -106,11 +108,13 @@ class R3BFootOnlineSpectra : public FairTask
 
     void SetSigmaRefreshRate(int rate) { fSigmaRefreshRate = rate; }
 
-    void SetBinParams(double minE, double maxE, double binsE)
+    void SetBinParams(double minE, double maxE, double binsE, double minZ, double maxZ)
     {
         fMinE = minE;
         fMaxE = maxE;
         fBinsE = binsE;
+        fMinZ = minZ;
+        fMaxZ = maxZ;
     }
 
     void SetMaxSize(double max) { fMaxSize = max; }
@@ -136,6 +140,7 @@ class R3BFootOnlineSpectra : public FairTask
     TClonesArray* fHitItems = nullptr;      // Array with hit items.
 
     R3BFootMappingPar* fMap_Par = nullptr; // Parameter container with mapping
+    R3BFootHitPar* fHit_Par = nullptr;     // Parameter container with mapping
 
     int fTrigger = -1; // Trigger value.
     int fTpat = 0;
@@ -149,10 +154,13 @@ class R3BFootOnlineSpectra : public FairTask
     double fMaxE = 5000.;
     double fBinsE = 1000;
 
+    double fMinZ = 0;
+    double fMaxZ = 15;
+
     // Maximum size of the cluster (-1 for no maximum)
     double fMaxSize = -1;
 
-    // Number of posible combinations of correlations
+    // Number of possible combinations of correlations
     int dim = 6;
 
     // Variables measured by each foot (example of G-249 experiment)

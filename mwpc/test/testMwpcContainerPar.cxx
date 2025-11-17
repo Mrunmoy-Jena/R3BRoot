@@ -12,16 +12,32 @@
  ******************************************************************************/
 
 #include "R3BMwpc0CalPar.h"
+#include "R3BMwpc1CalPar.h"
+#include "R3BMwpc2CalPar.h"
 #include "gtest/gtest.h"
 #include <map>
 
 namespace
 {
-    TEST(testMwpcCalPar, GetNumPadsX)
+    TEST(testMwpc0CalPar, GetNumPadsX)
     {
         R3BMwpc0CalPar par;
         par.SetNumPadsX(64);
 
         EXPECT_EQ(par.GetNumPadsX(), 64);
+    }
+    TEST(testMwpc1CalPar, GetNumPadsX)
+    {
+        R3BMwpc1CalPar par;
+        par.SetNumPadsX(128);
+
+        EXPECT_EQ(par.GetNumPadsX(), 128);
+    }
+    TEST(testMwpc2CalPar, GetNumPadsX)
+    {
+        R3BMwpc2CalPar par;
+        par.SetNumPadsX(128);
+
+        EXPECT_EQ(par.GetNumPadsX(), 128);
     }
 } // namespace

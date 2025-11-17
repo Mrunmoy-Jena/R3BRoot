@@ -16,13 +16,22 @@
 #include "R3BReader.h"
 #include <Rtypes.h>
 #include <memory>
+#include <vector>
 
 class TClonesArray;
 
-struct EXT_STR_h101_ACTAF_t;
-typedef struct EXT_STR_h101_ACTAF_t EXT_STR_h101_ACTAF;
-typedef struct EXT_STR_h101_ACTAF_onion_t EXT_STR_h101_ACTAF_onion;
+struct EXT_STR_h101_ACTAF2023_t;
+typedef struct EXT_STR_h101_ACTAF2023_t EXT_STR_h101_ACTAF2023;
+typedef struct EXT_STR_h101_ACTAF2023_onion_t EXT_STR_h101_ACTAF2023_onion;
+
+struct EXT_STR_h101_ACTAF2025_t;
+typedef struct EXT_STR_h101_ACTAF2025_t EXT_STR_h101_ACTAF2025;
+typedef struct EXT_STR_h101_ACTAF2025_onion_t EXT_STR_h101_ACTAF2025_onion;
+
 class ext_data_struct_info;
+class R3BActafMappingPar;
+class R3BActafCalPar;
+
 /**
  * A reader of ACTAF data with UCESB.
  * Receives mapped raw data and converts it to R3BRoot objects.
@@ -32,36 +41,59 @@ class ext_data_struct_info;
 class R3BActafReader : public R3BReader
 {
   public:
-    // Standard constructor
-    R3BActafReader(EXT_STR_h101_ACTAF_onion*, size_t);
+    R3BActafReader(EXT_STR_h101_ACTAF2023_onion*, size_t);
+    R3BActafReader(EXT_STR_h101_ACTAF2025_onion*, size_t);
 
-    // Destructor
     virtual ~R3BActafReader() = default;
 
-    // Setup structure information
     auto Init(ext_data_struct_info* /*unused*/) -> Bool_t override;
 
-    // Read data from full event structure
+    void SetParContainers() override;
+
     auto R3BRead() -> Bool_t override;
 
-    // Reset
     void Reset() override;
 
-    // Accessor to select online mode
-    inline void SetOnline(Bool_t option) { fOnline = option; }
+    inline void SetOnline(bool option = true) { fOnline = option; }
 
   private:
-    // An event counter
+    enum class UnpackerVersion : int
+    {
+        v2023 = 2023,
+        v2025 = 2025,
+        v2027 = 2027
+    };
+
+    // Read data from AMBER-2023 setup
+    auto R3BRead2023() -> bool;
+    // Read data from AMBER-2025 setup
+    auto R3BRead2025() -> bool;
+
+    // Event counter
     unsigned int fNEvent = 0;
-    // Reader specific data structure from ucesb
-    EXT_STR_h101_ACTAF_onion* fData;
+
+    // Reader specific data structures from ucesb
+    EXT_STR_h101_ACTAF2023_onion* fData23 = nullptr;
+    EXT_STR_h101_ACTAF2025_onion* fData25 = nullptr;
+
     // Data offset
-    size_t fOffset;
+    size_t fOffset = 0;
+
     // Don't store data for online
-    Bool_t fOnline = kFALSE;
+    bool fOnline = false;
+
     // Output array
     std::unique_ptr<TClonesArray> fArray;
 
+    // Unpacker version
+    UnpackerVersion fVersion = UnpackerVersion::v2023;
+
+    // Mapping parameters
+    R3BActafMappingPar* fMapping_Par = nullptr;
+    R3BActafCalPar* fCal_Par = nullptr;
+    std::vector<std::vector<int>> mapping;
+    bool fApplyFilter = true;
+
   public:
-    ClassDefOverride(R3BActafReader, 0);
+    ClassDefOverride(R3BActafReader, 1);
 };

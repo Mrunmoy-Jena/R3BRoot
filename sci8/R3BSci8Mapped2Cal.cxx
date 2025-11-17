@@ -131,7 +131,7 @@ InitStatus R3BSci8Mapped2Cal::ReInit()
 
 void R3BSci8Mapped2Cal::Exec(Option_t* option)
 {
-    // check for requested trigger (Todo: should be done globablly / somewhere else)
+    // check for requested trigger (Todo: should be done globally / somewhere else)
     if ((fTrigger >= 0) && (header) && (header->GetTrigger() != fTrigger))
         return;
 
@@ -289,24 +289,21 @@ void R3BSci8Mapped2Cal::Exec(Option_t* option)
             {
                 calItem->fTimeV_r_ns = times_ns;
                 if (calItem->fTimeV_r_ns < 0. || IS_NAN(calItem->fTimeV_r_ns))
-                    LOG(info) << "Problem with  fTimeV_r_ns: " << calItem->fTimeV_r_ns << " " << times_ns << " "
-                              << endl;
+                    LOG(info) << "Problem with  fTimeV_r_ns: " << calItem->fTimeV_r_ns << " " << times_ns;
             }
 
             if (iType == 1)
             {
                 calItem->fTimeL_r_ns = times_ns;
                 if (calItem->fTimeL_r_ns < 0. || IS_NAN(calItem->fTimeL_r_ns))
-                    LOG(info) << "Problem with  fTimeL_r_ns: " << calItem->fTimeL_r_ns << " " << times_ns << " "
-                              << endl;
+                    LOG(info) << "Problem with  fTimeL_r_ns: " << calItem->fTimeL_r_ns << " " << times_ns;
             }
 
             if (iType == 2)
             {
                 calItem->fTimeT_r_ns = times_ns;
                 if (calItem->fTimeT_r_ns < 0. || IS_NAN(calItem->fTimeT_r_ns))
-                    LOG(info) << "Problem with  fTimeT_r_ns: " << calItem->fTimeT_r_ns << " " << times_ns << " "
-                              << endl;
+                    LOG(info) << "Problem with  fTimeT_r_ns: " << calItem->fTimeT_r_ns << " " << times_ns;
             }
         }
 
@@ -317,24 +314,21 @@ void R3BSci8Mapped2Cal::Exec(Option_t* option)
             {
                 calItem->fTimeV_l_ns = times_ns;
                 if (calItem->fTimeV_l_ns < 0. || IS_NAN(calItem->fTimeV_l_ns))
-                    LOG(info) << "Problem with  fTimeV_l_ns: " << calItem->fTimeV_l_ns << " " << times_ns << " "
-                              << endl;
+                    LOG(info) << "Problem with  fTimeV_l_ns: " << calItem->fTimeV_l_ns << " " << times_ns;
             }
 
             if (iType == 1)
             {
                 calItem->fTimeL_l_ns = times_ns;
                 if (calItem->fTimeL_l_ns < 0. || IS_NAN(calItem->fTimeL_l_ns))
-                    LOG(info) << "Problem with  fTimeL_l_ns: " << calItem->fTimeL_l_ns << " " << times_ns << " "
-                              << endl;
+                    LOG(info) << "Problem with  fTimeL_l_ns: " << calItem->fTimeL_l_ns << " " << times_ns;
             }
 
             if (iType == 2)
             {
                 calItem->fTimeT_l_ns = times_ns;
                 if (calItem->fTimeT_l_ns < 0. || IS_NAN(calItem->fTimeT_l_ns))
-                    LOG(info) << "Problem with  fTimeT_l_ns: " << calItem->fTimeT_l_ns << " " << times_ns << " "
-                              << endl;
+                    LOG(info) << "Problem with  fTimeT_l_ns: " << calItem->fTimeT_l_ns << " " << times_ns;
             }
         }
 

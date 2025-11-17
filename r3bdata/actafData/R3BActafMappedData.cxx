@@ -15,19 +15,37 @@
 #include <fmt/core.h>
 
 R3BActafMappedData::R3BActafMappedData(UInt_t pad,
-                                       std::vector<UInt_t> trace,
+                                       const std::array<double, ACTAF_BINS>& trace,
                                        double energy,
                                        double baseline,
-                                       int risetime,
+                                       double risetime,
                                        int maxpos,
-                                       double maxamplitude)
+                                       double maxamplitude,
+                                       double leadingedge10,
+                                       double rms,
+                                       double rmsFilt,
+                                       double baselineFilt,
+                                       double maw)
     : fPad(pad)
-    , fTrace(trace)
     , fE(energy)
     , fBaseline(baseline)
     , fRisetime(risetime)
     , fMaxpos(maxpos)
     , fMaxamplitude(maxamplitude)
+    , fTrace(trace)
+    , fLeadingEdge10(leadingedge10)
+    , fRms(rms)
+    , fRmsFilt(rmsFilt)
+    , fBaselineFilt(baselineFilt)
+    , fMaw(maw)
+{
+}
+
+R3BActafMappedData::R3BActafMappedData(UInt_t pad, int det_mask, int timetag, int spill_nb)
+    : fPad(pad)
+    , fDetMask(det_mask)
+    , fTimeTag(timetag)
+    , fSpillNb(spill_nb)
 {
 }
 
@@ -37,20 +55,25 @@ std::string R3BActafMappedData::toString() const
     for (size_t i = 0; i < fTrace.size(); ++i)
     {
         trace_str += std::to_string(fTrace[i]);
-        if (i < fTrace.size())
+        if (i + 1 < fTrace.size())
             trace_str += ", ";
     }
     trace_str += "]";
 
     return fmt::format(
-        "Pad: {}, Trace: {}, Energy : {}, Baseline: {}, Risetime: {}, Max-position: {}, Max-amplitude: {}",
+        "Pad: {}, Trace: {}, Energy : {}, Baseline: {}, Risetime: {}, "
+        "Max-position: {}, Max-amplitude: {}, Leading-Time: {}, Rms: {}, Rms Filtered: {}, Baseline Filtered {}",
         GetPad(),
         trace_str,
         GetE(),
         GetBaseline(),
         GetRisetime(),
         GetMaxpos(),
-        GetMaxampl());
+        GetMaxampl(),
+        GetLeadingEdgeTime(),
+        GetRms(),
+        GetRmsFilt(),
+        GetBaselineFilt());
 }
 
 void R3BActafMappedData::Print(const Option_t*) const { std::cout << *this << std::endl; }

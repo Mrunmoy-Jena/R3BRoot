@@ -34,6 +34,7 @@
 #pragma link C++ class R3BWhiterabbitLosReader+;
 #pragma link C++ class R3BWhiterabbitPspReader+;
 #pragma link C++ class R3BWhiterabbitMusicReader+;
+#pragma link C++ class R3BWhiterabbitActafReader+;
 #pragma link C++ class R3BTrloiiTpatReader+;
 #pragma link C++ class R3BTrloiiSampReader+;
 #pragma link C++ class R3BTrloiiScalerReader+;
@@ -43,7 +44,6 @@
 #pragma link C++ class R3BS515PspxReader+;
 #pragma link C++ class R3BBunchedFiberReader+;
 #pragma link C++ class R3BBunchedFiberSPMTTrigReader+;
-#pragma link C++ class R3BSfibReader+;
 #pragma link C++ class R3BFi0Reader+;
 #pragma link C++ class R3BFi1aReader+;
 #pragma link C++ class R3BFi1bReader+;
@@ -68,7 +68,6 @@
 #pragma link C++ class R3BPtofReader+;
 #pragma link C++ class R3BNeulandTamexReader+;
 #pragma link C++ class R3BNeulandTacquilaReader+;
-#pragma link C++ class R3BStrawtubesReader+;
 #pragma link C++ class R3BAmsReader+;
 #pragma link C++ class R3BMusicReader+;
 #pragma link C++ class R3BFootReader+;
@@ -84,7 +83,6 @@
 #pragma link C++ class R3BSyncCheckReader+;
 #pragma link C++ class R3BMosaicReader+;
 #pragma link C++ class R3BActafReader+;
-
 
 #pragma link C++ class EXT_STR_h101_unpack_t;
 #pragma link C++ class EXT_STR_h101_whiterabbit_onion_t;
@@ -115,12 +113,12 @@
 #pragma link C++ class EXT_STR_h101_SCI2_onion_t;
 #pragma link C++ class EXT_STR_h101_SCI8_onion_t;
 #pragma link C++ class EXT_STR_h101_ROLU_onion_t;
-#pragma link C++ class EXT_STR_h101_ROLU_NOTRIG_onion_t;
 #pragma link C++ class EXT_STR_h101_TOFD_onion_t;
 #pragma link C++ class EXT_STR_h101_TOFI_onion_t;
 #pragma link C++ class EXT_STR_h101_PTOF_onion_t;
 #pragma link C++ class EXT_STR_h101_PSP_onion_t;
-#pragma link C++ class EXT_STR_h101_CALIFA_onion_t;
+#pragma link C++ class EXT_STR_h101_CALIFA202402_onion_t;
+#pragma link C++ class EXT_STR_h101_CALIFA202506_onion_t;
 #pragma link C++ class EXT_STR_h101_WRNEULAND_onion_t;
 #pragma link C++ class EXT_STR_h101_raw_nnp_tacquila_onion_t;
 #pragma link C++ class EXT_STR_h101_raw_nnp_tamex_onion_t;
@@ -148,8 +146,11 @@
 #pragma link C++ class EXT_STR_h101_LOS_t;
 #pragma link C++ class EXT_STR_h101_RPC_t;
 #pragma link C++ class EXT_STR_h101_SYNC_CHECK_t;
-#pragma link C++ class EXT_STR_h101_MOSAIC_onion_t;
+#pragma link C++ class EXT_STR_h101_MOSAIC202402_onion_t;
+#pragma link C++ class EXT_STR_h101_MOSAIC202506_onion_t;
 #pragma link C++ class EXT_STR_h101_HMP_onion_t;
-#pragma link C++ class EXT_STR_h101_ACTAF_onion_t;
+#pragma link C++ class EXT_STR_h101_ACTAF2023_onion_t;
+#pragma link C++ class EXT_STR_h101_ACTAF2025_onion_t;
+#pragma link C++ class EXT_STR_h101_WRACTAF_onion_t;
 
 #endif

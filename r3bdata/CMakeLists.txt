@@ -19,6 +19,8 @@ set(SRCS
     #cmake-format: sortable
     actafData/R3BActafPoint.cxx
     actafData/R3BActafMappedData.cxx
+    actafData/R3BActafCalData.cxx
+    actafData/R3BActafHitData.cxx
     alpideData/R3BAlpideCalData.cxx
     alpideData/R3BAlpideHitData.cxx
     alpideData/R3BAlpideMappedData.cxx
@@ -32,10 +34,6 @@ set(SRCS
     califaData/R3BCalifaCrystalCalData.cxx
     califaData/R3BCalifaMappedData.cxx
     califaData/R3BCalifaPoint.cxx
-    dchData/R3BDch2pDigi.cxx
-    dchData/R3BDchDigi.cxx
-    dchData/R3BDchFullPoint.cxx
-    dchData/R3BDchPoint.cxx
     fibData/R3BBunchedFiberCalData.cxx
     fibData/R3BBunchedFiberHitData.cxx
     fibData/R3BBunchedFiberMappedData.cxx
@@ -57,8 +55,6 @@ set(SRCS
     frssciData/R3BFrsSciPosCalData.cxx
     frssciData/R3BFrsSciTcalData.cxx
     frssciData/R3BFrsSciTofCalData.cxx
-    gfiData/R3BGfiDigi.cxx
-    gfiData/R3BGfiPoint.cxx
     landData/R3BLandDigi.cxx
     landData/R3BLandFirstHits.cxx
     landData/R3BLandHit.cxx
@@ -69,8 +65,6 @@ set(SRCS
     losData/R3BLosHitData.cxx
     losData/R3BLosMappedData.cxx
     losData/R3BLosTCalData.cxx
-    mtofData/R3BmTofDigi.cxx
-    mtofData/R3BmTofPoint.cxx
     musicData/R3BMusicCalData.cxx
     musicData/R3BMusicHitData.cxx
     musicData/R3BMusicMappedData.cxx
@@ -121,12 +115,6 @@ set(SRCS
     sci8Data/R3BSci8CalData.cxx
     sci8Data/R3BSci8HitData.cxx
     sci8Data/R3BSci8MappedData.cxx
-    sfibData/R3BSfibCalData.cxx
-    sfibData/R3BSfibHitData.cxx
-    sfibData/R3BSfibMappedData.cxx
-    strawtubesData/R3BStrawtubesCalData.cxx
-    strawtubesData/R3BStrawtubesHitData.cxx
-    strawtubesData/R3BStrawtubesMappedData.cxx
     synccheckData/R3BSyncCheckData.cxx
     tofData/R3BPaddleCalData.cxx
     tofData/R3BPtofHit.cxx
@@ -167,6 +155,8 @@ set(HEADERS
     #cmake-format: sortable
     actafData/R3BActafPoint.h
     actafData/R3BActafMappedData.h
+    actafData/R3BActafCalData.h
+    actafData/R3BActafHitData.h
     alpideData/R3BAlpideCalData.h
     alpideData/R3BAlpideHitData.h
     alpideData/R3BAlpideMappedData.h
@@ -180,10 +170,6 @@ set(HEADERS
     califaData/R3BCalifaCrystalCalData.h
     califaData/R3BCalifaMappedData.h
     califaData/R3BCalifaPoint.h
-    dchData/R3BDch2pDigi.h
-    dchData/R3BDchDigi.h
-    dchData/R3BDchFullPoint.h
-    dchData/R3BDchPoint.h
     fibData/R3BBunchedFiberCalData.h
     fibData/R3BBunchedFiberHitData.h
     fibData/R3BBunchedFiberMappedData.h
@@ -205,8 +191,6 @@ set(HEADERS
     frssciData/R3BFrsSciPosCalData.h
     frssciData/R3BFrsSciTcalData.h
     frssciData/R3BFrsSciTofCalData.h
-    gfiData/R3BGfiDigi.h
-    gfiData/R3BGfiPoint.h
     landData/R3BLandDigi.h
     landData/R3BLandFirstHits.h
     landData/R3BLandHit.h
@@ -217,8 +201,6 @@ set(HEADERS
     losData/R3BLosHitData.h
     losData/R3BLosMappedData.h
     losData/R3BLosTCalData.h
-    mtofData/R3BmTofDigi.h
-    mtofData/R3BmTofPoint.h
     musicData/R3BMusicCalData.h
     musicData/R3BMusicHitData.h
     musicData/R3BMusicMappedData.h
@@ -269,12 +251,6 @@ set(HEADERS
     sci8Data/R3BSci8CalData.h
     sci8Data/R3BSci8HitData.h
     sci8Data/R3BSci8MappedData.h
-    sfibData/R3BSfibCalData.h
-    sfibData/R3BSfibHitData.h
-    sfibData/R3BSfibMappedData.h
-    strawtubesData/R3BStrawtubesCalData.h
-    strawtubesData/R3BStrawtubesHitData.h
-    strawtubesData/R3BStrawtubesMappedData.h
     synccheckData/R3BSyncCheckData.h
     tofData/R3BPaddleCalData.h
     tofData/R3BPtofHit.h
@@ -317,7 +293,6 @@ set(DIRS
     amsData
     beammonitorData
     califaData
-    dchData
     fibData
     footData
     frsData
@@ -325,7 +300,6 @@ set(DIRS
     gfiData
     landData
     losData
-    mtofData
     musicData
     musliData
     mwpcData
@@ -337,8 +311,6 @@ set(DIRS
     sampData
     sci2Data
     sci8Data
-    sfibData
-    strawtubesData
     synccheckData
     tofData
     tofiData

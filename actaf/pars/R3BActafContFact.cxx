@@ -18,13 +18,14 @@
 //-----------------------------------------------------------------
 
 #include <FairRuntimeDb.h>
+#include <TClass.h>
+#include <string>
 
+#include "R3BActafCalPar.h"
 #include "R3BActafContFact.h"
 #include "R3BActafMappingPar.h"
 #include "R3BLogger.h"
 #include "R3BTGeoPar.h"
-
-#include <TClass.h>
 
 static R3BActafContFact gR3BActafContFact;
 
@@ -48,12 +49,15 @@ void R3BActafContFact::setAllContainers()
     auto* p2 = new FairContainer("actafMappingPar", "ACTAF Mapping Parameters", "ActafMappingParContext");
     p2->addContext("ActafMappingParContext");
     containers->Add(p2);
+    auto* p3 = new FairContainer("actafCalPar", "ACTAF Cal Parameters", "ActafCalParContext");
+    p3->addContext("ActafCalParContext");
+    containers->Add(p3);
 }
 
 FairParSet* R3BActafContFact::createContainer(FairContainer* c)
 {
     // For an actual context, which is not an empty string and not the default context
-    // of this container, the name is concatinated with the context.
+    // of this container, the name is concatenated with the context.
     const std::string name(c->GetName());
     R3BLOG(info, "Create container name: " << name.c_str());
 
@@ -65,6 +69,10 @@ FairParSet* R3BActafContFact::createContainer(FairContainer* c)
     else if (name == "actafMappingPar")
     {
         p = new R3BActafMappingPar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
+    }
+    else if (name == "actafCalPar")
+    {
+        p = new R3BActafCalPar(c->getConcatName().Data(), c->GetTitle(), c->getContext());
     }
     return p;
 }

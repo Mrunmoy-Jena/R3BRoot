@@ -11,8 +11,16 @@
 # or submit itself to any jurisdiction.                                      #
 ##############################################################################
 
-set(SRCS R3BTCalModulePar.cxx R3BTCalPar.cxx R3BTCalContFact.cxx R3BTCalEngine.cxx)
-set(HEADERS R3BTCalModulePar.h R3BTCalPar.h R3BTCalContFact.h R3BTCalEngine.h)
+set(SRCS 
+    R3BTCalModulePar.cxx 
+    R3BTCalPar.cxx 
+    R3BTCalContFact.cxx 
+    R3BTCalEngine.cxx)
+set(HEADERS 
+    R3BTCalModulePar.h 
+    R3BTCalPar.h 
+    R3BTCalContFact.h 
+    R3BTCalEngine.h)
 
 add_library_with_dictionary(
     LIBNAME
@@ -27,3 +35,5 @@ add_library_with_dictionary(
     ${CMAKE_CURRENT_SOURCE_DIR}
     DEPENDENCIES
     R3BBase)
+    
+add_subdirectory(test)

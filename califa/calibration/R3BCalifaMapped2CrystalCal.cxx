@@ -100,13 +100,13 @@ void R3BCalifaMapped2CrystalCal::SetParameter()
     fCalTotParams = fTotCal_Par->GetCryCalParams(); // Array with the Tot Cal parameters
     assert(fCalTotParams->GetSize() >= fNumCrystals * fNumTotParams);
 
-    // handle old calibrations which mapped to barrel protons to crId+2432:
+    // handle old calibrations which mapped to barrel protons to crId+2544:
     // If you cal[id] is zero or nan (you wish),
-    // And cal[id+2432] is nonzero,
-    // Then make cal[id]=cal[id+2432] in case you are using the new unpacker
+    // And cal[id+2544] is nonzero,
+    // Then make cal[id]=cal[id+2544] in case you are using the new unpacker
     // (where barrel is always in [1, 1952]) with an old calibration
 
-    constexpr int offset = 2432;
+    constexpr int offset = 2544;
 
     auto& cal = *fCalParams;
     auto& tot = *fCalTotParams;
@@ -138,7 +138,7 @@ void R3BCalifaMapped2CrystalCal::SetParameter()
     {
         auto a = cal.GetAt(2 * (id - 1) + 0);
         auto b = cal.GetAt(2 * (id - 1) + 1);
-        return (std::isnan(a) || a == 0.0) && (std::isnan(a) || a == 0.0);
+        return (std::isnan(a) || a == 0.0) && (std::isnan(b) || b == 0.0);
     };
 
     int replaced{};
@@ -255,13 +255,19 @@ void R3BCalifaMapped2CrystalCal::Exec(Option_t* /*option*/)
                 cal[idx] = NAN;
 
         double TotCal = Tot;
+        double a0, a1;
         if (fCalTotParams)
         {
-            double a0 = params_tot.at(fNumTotParams * (crystalId - 1));
-            double a1 = params_tot.at(fNumTotParams * (crystalId - 1) + 1);
+            a0 = params_tot.at(fNumTotParams * (crystalId - 1));
+            a1 = params_tot.at(fNumTotParams * (crystalId - 1) + 1);
             // TotCal = a0 * TMath::Exp(Tot / a1);
-            TotCal = (Tot == 0) ? 0 : a0 * TMath::Exp(Tot / a1);
         }
+        else
+        {
+            a0 = 6500;
+            a1 = 1000; // default ToT parameters, sufficient for a coarse extrapolation
+        }
+        TotCal = (Tot == 0) ? 0 : a0 * TMath::Exp(Tot / a1);
         AddCalData(crystalId, cal[en], cal[Nf], cal[Ns], wrts, TotCal);
     }
     return;

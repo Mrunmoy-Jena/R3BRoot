@@ -11,23 +11,23 @@
  * or submit itself to any jurisdiction.                                      *
  ******************************************************************************/
 
-#ifndef R3BAnalysisContFact_H
-#define R3BAnalysisContFact_H
+#pragma once
 
-#include "FairContFact.h"
+#include <FairContFact.h>
 
 class FairContainer;
 
 class R3BAnalysisContFact : public FairContFact
 {
+  public:
+    R3BAnalysisContFact();
+    virtual ~R3BAnalysisContFact() = default;
+
+    FairParSet* createContainer(FairContainer*) override;
+
   private:
     void setAllContainers();
 
   public:
-    R3BAnalysisContFact();
-    ~R3BAnalysisContFact() {}
-    FairParSet* createContainer(FairContainer*);
-    ClassDef(R3BAnalysisContFact, 0)
+    ClassDefOverride(R3BAnalysisContFact, 0); // NOLINT
 };
-
-#endif /* R3BAnalysisContFact_H */

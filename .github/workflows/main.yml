@@ -44,7 +44,7 @@
 #
 # SPDX-License-Identifier: LGPL-3.0-or-later
 
-name: CI-CD
+name: CI-CD-C++17
 
 # Controls when the action will run. 
 on:
@@ -65,7 +65,7 @@ jobs:
   cache-cleanup:
     runs-on: ubuntu-latest
     steps:
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           fetch-depth: 0
           submodules: 'true'
@@ -93,6 +93,8 @@ jobs:
         # r3broot. Each group is used by only one job.
         repos: [ r3broot, glad-tpc, sofia-frs-asy, r3broot-conan ]
         os: [ debian10, debian11, debian12 ]
+        fsv: [ jan24p1 ]
+        cpp: [ 17 ]
 
         # The list under "include" defines some properties for each group:
         #
@@ -145,6 +147,10 @@ jobs:
           # build with conan package manager
           - repos: r3broot-conan
             preset: default
+            
+        exclude:
+          - repos: r3broot-conan
+            os: debian10
 
     # Jobs are run inside a Docker container, which provides different compiled
     # tool-kits for the building, such as clang-tidy and cvmfs. For more
@@ -168,7 +174,7 @@ jobs:
     # another github repo or a self-defined one in .github/actions.
     steps:
       # Fetch updates from pull request branches using a public github action.
-      - uses: actions/checkout@v4
+      - uses: actions/checkout@v5
         with:
           # This allows all commits of all branches to be fetched.
           fetch-depth: 0
